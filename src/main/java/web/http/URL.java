@@ -26,18 +26,29 @@ public class URL {
 
         this.scheme = Scheme.of(data[0]);
 
+        data = extractUserInfo(data);
+
+        this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
+        this.path = Path.of(splitPath(data[1]));
+
+        extractQueryStrings(data);
+    }
+
+    private String[] extractUserInfo(String[] data) {
         if (isRequiredToUserData()) {
             this.userInfo = UserInfo.of(data[1]);
             data = splitUserInfo(data);
         }
+        return data;
+    }
 
-
-        this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
-        this.path = new Path(splitPath(data[1]));
-
+    private void extractQueryStrings(String[] data) {
         if (existQueryString(data)) {
             String[] queryStrings = splitQueryString(data[1]);
-            this.queryStrings = Arrays.stream(queryStrings).map(QueryString::new).collect(toList());
+            this.queryStrings =
+                    Arrays.stream(queryStrings)
+                            .map(QueryString::new)
+                            .collect(toList());
         }
     }
 

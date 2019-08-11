@@ -10,10 +10,14 @@ public class Path {
     private List<PathCarving> values;
 
 
-    public Path(String value) {
+    private Path(String value) {
         List<String> splitedValues = Arrays.asList(value.split(DELIMITER_PATH));
 
         this.values = splitedValues.stream().map(PathCarving::new).collect(toList());
+    }
+
+    public static Path of(String value) {
+        return new Path(value);
     }
 
     public PathCarving get(int index) {

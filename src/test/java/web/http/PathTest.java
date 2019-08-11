@@ -14,7 +14,7 @@ class PathTest {
         String expectedFirstPath = "seasonal";
         String expectedSecondPath = "index.html";
 
-        Path path = new Path(givenPath);
+        Path path = Path.of(givenPath);
 
         assertThat(path.get(1)).isEqualTo(new PathCarving(expectedFirstPath));
         assertThat(path.get(2)).isEqualTo(new PathCarving(expectedSecondPath));
@@ -27,7 +27,7 @@ class PathTest {
     void setParameterSeveral() {
         String givenPath = "/hammers;type=d/index.html;graphics=true";
 
-        Path path = new Path(givenPath);
+        Path path = Path.of(givenPath);
 
         assertThat(path.get(1).getParameter(0).getKey()).isEqualTo("type");
         assertThat(path.get(1).getParameter(0).getValue()).isEqualTo("d");
