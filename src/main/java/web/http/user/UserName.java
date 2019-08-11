@@ -1,15 +1,15 @@
-package web.http;
+package web.http.user;
 
 import java.util.Objects;
 
-public class Password {
+public class UserName {
     private final String value;
 
-    public Password() {
-        this("chrome@example.com");
+    public UserName() {
+        this("anonymous");
     }
 
-    public Password(String value) {
+    public UserName(String value) {
         this.value = value;
     }
 
@@ -17,8 +17,8 @@ public class Password {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Password password = (Password) o;
-        return Objects.equals(value, password.value);
+        UserName userName = (UserName) o;
+        return Objects.equals(value, userName.value);
     }
 
     @Override

@@ -1,5 +1,9 @@
 package web.http;
 
+import web.http.user.Password;
+import web.http.user.UserInfo;
+import web.http.user.UserName;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,31 +11,38 @@ import static java.util.stream.Collectors.*;
 import static web.http.Scheme.Type;
 
 public class URL {
+    public static final String DELIMITER_SCHEME = "://";
     private Scheme scheme;
     private Host host;
     private Port port;
-    private UserName userName;
-    private Password password;
+    //    private UserName userName;
+//    private Password password;
+    private UserInfo userInfo;
     private Path path;
     private List<QueryString> queryStrings;
 
     public URL(String input) {
-        String[] splitedInput = input.split("://");
+        String[] data = input.split(DELIMITER_SCHEME);
 
-        this.scheme = Scheme.of(splitedInput[0]);
+        this.scheme = Scheme.of(data[0]);
 
         if (isRequiredToUserData()) {
-            splitedInput = setUserData(splitedInput);
+            this.userInfo = UserInfo.of(data[1]);
+            data = splitUserInfo(data);
         }
 
-        this.host = setHost(splitedInput[1]);
-        this.port = setPort(splitedInput[1]);
-        this.path = new Path(splitPath(splitedInput[1]));
+        this.host = setHost(data[1]);
+        this.port = setPort(data[1]);
+        this.path = new Path(splitPath(data[1]));
 
-        if (existQueryString(splitedInput)) {
-            String[] queryStrings = splitQueryString(splitedInput[1]);
+        if (existQueryString(data)) {
+            String[] queryStrings = splitQueryString(data[1]);
             this.queryStrings = Arrays.stream(queryStrings).map(QueryString::new).collect(toList());
         }
+    }
+
+    private String[] splitUserInfo(String[] data) {
+        return !isAnonymous(data[1]) ? data[1].split("@") : data;
     }
 
     private Port setPort(String s) {
@@ -64,19 +75,6 @@ public class URL {
         return splitedInput[1].contains("?");
     }
 
-    private String[] setUserData(String[] detachedScheme) {
-        if (!isAnonymous(detachedScheme[1])) {
-            detachedScheme = detachedScheme[1].split("@");
-            String[] userData = detachedScheme[0].split(":");
-            this.userName = new UserName(userData[0]);
-            this.password = new Password(userData[1]);
-            return detachedScheme;
-        }
-        this.userName = new UserName();
-        this.password = new Password();
-        return detachedScheme;
-    }
-
     private boolean isAnonymous(String detachedScheme) {
         return !detachedScheme.contains("@");
     }
@@ -94,11 +92,11 @@ public class URL {
     }
 
     public UserName getUserName() {
-        return userName;
+        return userInfo.getUserName();
     }
 
     public Password getPassword() {
-        return password;
+        return userInfo.getPassword();
     }
 
     public List<QueryString> getQueryStrings() {
