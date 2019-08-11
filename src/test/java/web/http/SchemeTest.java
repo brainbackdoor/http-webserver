@@ -2,9 +2,12 @@ package web.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static web.http.Scheme.Type;
 
 class SchemeTest {
 
@@ -30,7 +33,14 @@ class SchemeTest {
         assertThat(Scheme.of(lowerCase)).isEqualTo(Scheme.of(uppserCase));
     }
 
-    //TODO: 스킴에는 http, https, mailto, ftp, rstp, file, telnet 등이 있다.
+    @ParameterizedTest
+    @EnumSource(Type.class)
+    @DisplayName("스킴에는 http, https, mailto, ftp, rstp, file, telnet 등이 있다.")
+    void schemeType(Type type) {
+        Scheme scheme = Scheme.of(type.name());
+
+        assertThat(scheme).isNotNull();
+    }
 
     //TODO: http는 80, https는 443 이 기본 포트값이다.
 
