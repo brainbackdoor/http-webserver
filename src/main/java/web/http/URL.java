@@ -1,5 +1,8 @@
 package web.http;
 
+import web.http.connection.ConnectionInfo;
+import web.http.connection.Host;
+import web.http.connection.Port;
 import web.http.user.Password;
 import web.http.user.UserInfo;
 import web.http.user.UserName;
@@ -13,11 +16,8 @@ import static web.http.Scheme.Type;
 public class URL {
     public static final String DELIMITER_SCHEME = "://";
     private Scheme scheme;
-    private Host host;
-    private Port port;
-    //    private UserName userName;
-//    private Password password;
     private UserInfo userInfo;
+    private ConnectionInfo connectionInfo;
     private Path path;
     private List<QueryString> queryStrings;
 
@@ -31,8 +31,8 @@ public class URL {
             data = splitUserInfo(data);
         }
 
-        this.host = setHost(data[1]);
-        this.port = setPort(data[1]);
+
+        this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
         this.path = new Path(splitPath(data[1]));
 
         if (existQueryString(data)) {
@@ -43,24 +43,6 @@ public class URL {
 
     private String[] splitUserInfo(String[] data) {
         return !isAnonymous(data[1]) ? data[1].split("@") : data;
-    }
-
-    private Port setPort(String s) {
-        return Type.hasDefaultPortNumber(getScheme())
-                ? retrievePortNumber()
-                : new Port(extractPortNumber(s));
-    }
-
-    private Port retrievePortNumber() {
-        return new Port(getPortNumber());
-    }
-
-    private int extractPortNumber(String s) {
-        return Integer.parseInt(s.split("/")[0].split(":")[1]);
-    }
-
-    private Host setHost(String s) {
-        return Host.of(s.split("/")[0].split(":")[0]);
     }
 
     private String splitPath(String s) {
@@ -87,10 +69,6 @@ public class URL {
         return this.scheme.getType();
     }
 
-    public int getPortNumber() {
-        return this.scheme.getPortNumber();
-    }
-
     public UserName getUserName() {
         return userInfo.getUserName();
     }
@@ -104,11 +82,11 @@ public class URL {
     }
 
     public Host getHost() {
-        return host;
+        return connectionInfo.getHost();
     }
 
     public Port getPort() {
-        return port;
+        return connectionInfo.getPort();
     }
 
     public Path getPath() {

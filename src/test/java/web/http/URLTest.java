@@ -2,6 +2,8 @@ package web.http;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import web.http.connection.Host;
+import web.http.connection.Port;
 import web.http.user.Password;
 import web.http.user.UserName;
 
@@ -69,7 +71,7 @@ class URLTest {
         URL url = new URL(givenTrue);
 
         assertThat(url.getHost()).isEqualTo(Host.of("www.joes-hardware.com"));
-        assertThat(url.getPort()).isEqualTo(new Port(80));
+        assertThat(url.getPort()).isEqualTo(Port.of(80));
     }
 
     @Test

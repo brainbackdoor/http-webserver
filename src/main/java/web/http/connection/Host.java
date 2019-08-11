@@ -1,4 +1,4 @@
-package web.http;
+package web.http.connection;
 
 import java.util.Objects;
 import java.util.regex.Pattern;

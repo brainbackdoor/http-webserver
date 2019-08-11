@@ -1,12 +1,16 @@
-package web.http;
+package web.http.connection;
 
 import java.util.Objects;
 
 public class Port {
     private final int number;
 
-    public Port(int number) {
+    private Port(int number) {
         this.number = number;
+    }
+
+    public static Port of(int number) {
+        return new Port(number);
     }
 
     @Override
