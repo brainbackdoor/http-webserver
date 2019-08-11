@@ -59,4 +59,15 @@ class URLTest {
         assertThat(url.getQueryStrings().get(0).getKey()).isEqualTo("item");
         assertThat(url.getQueryStrings().get(0).getValue()).isEqualTo("12731");
     }
+
+    @Test
+    @DisplayName("Host와 Port 정보를 추출한다.")
+    void setHostAndPort() {
+        String givenTrue = "http://www.joes-hardware.com:80/index.html";
+
+        URL url = new URL(givenTrue);
+
+        assertThat(url.getHost()).isEqualTo(Host.of("www.joes-hardware.com"));
+        assertThat(url.getPort()).isEqualTo(new Port(80));
+    }
 }

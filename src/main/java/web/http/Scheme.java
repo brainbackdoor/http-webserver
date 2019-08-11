@@ -69,6 +69,11 @@ public class Scheme {
             return Arrays.stream(values()).filter(type -> type.name().equals(name)).findFirst().get();
         }
 
+        public static boolean hasDefaultPortNumber(Type scheme) {
+            List<Type> hasDefaultPortNumber = Arrays.asList(HTTP, HTTPS);
+            return hasDefaultPortNumber.stream().filter(v -> v.equals(scheme)).findAny().isPresent();
+        }
+
         public static boolean isRequiredToUserData(Type scheme) {
             List<Type> requiredUserData = Arrays.asList(FTP, RSTP, TELNET);
             return requiredUserData.stream().filter(v -> v.equals(scheme)).findAny().isPresent();

@@ -17,30 +17,59 @@ public class URL {
 
     public URL(String input) {
         String[] splitedInput = input.split("://");
+
         this.scheme = Scheme.of(splitedInput[0]);
-        if(isRequiredToUserData()){
-            setUserData(splitedInput);
+
+        if (isRequiredToUserData()) {
+            splitedInput = setUserData(splitedInput);
         }
-        if(existQueryString(splitedInput)) {
-            String[] queryStrings = splitedInput[1].split("\\?")[1].split("&");
+
+        this.host = setHost(splitedInput[1]);
+        this.port = setPort(splitedInput[1]);
+
+        if (existQueryString(splitedInput)) {
+            String[] queryStrings = splitQueryString(splitedInput[1]);
             this.queryStrings = Arrays.stream(queryStrings).map(QueryString::new).collect(toList());
         }
+    }
+
+    private Port setPort(String s) {
+        return Type.hasDefaultPortNumber(getScheme())
+                ? retrievePortNumber()
+                : new Port(extractPortNumber(s));
+    }
+
+    private Port retrievePortNumber() {
+        return new Port(getPortNumber());
+    }
+
+    private int extractPortNumber(String s) {
+        return Integer.parseInt(s.split("/")[0].split(":")[1]);
+    }
+
+    private Host setHost(String s) {
+        return Host.of(s.split("/")[0].split(":")[0]);
+    }
+
+    private String[] splitQueryString(String s) {
+        return s.split("\\?")[1].split("&");
     }
 
     private boolean existQueryString(String[] splitedInput) {
         return splitedInput[1].contains("?");
     }
 
-    private void setUserData(String[] detachedScheme) {
-        if(!isAnonymous(detachedScheme[1])) {
+    private String[] setUserData(String[] detachedScheme) {
+        if (!isAnonymous(detachedScheme[1])) {
             detachedScheme = detachedScheme[1].split("@");
             String[] userData = detachedScheme[0].split(":");
             this.userName = new UserName(userData[0]);
             this.password = new Password(userData[1]);
-            return;
+            return detachedScheme;
         }
         this.userName = new UserName();
         this.password = new Password();
+        return detachedScheme;
     }
 
     private boolean isAnonymous(String detachedScheme) {
@@ -69,5 +98,13 @@ public class URL {
 
     public List<QueryString> getQueryStrings() {
         return queryStrings;
+    }
+
+    public Host getHost() {
+        return host;
+    }
+
+    public Port getPort() {
+        return port;
     }
 }
