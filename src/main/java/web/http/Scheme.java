@@ -6,19 +6,23 @@ import java.util.regex.Pattern;
 
 public class Scheme {
     public static final String RULE_SCHEME_START_WITH_ALPHABET = "^[a-zA-Z]";
-    private final Type name;
+    private final Type type;
 
-    private Scheme(final String name) {
-        validate(name);
-        this.name = Type.of(name.toUpperCase());
+    private Scheme(final String type) {
+        validate(type);
+        this.type = Type.of(type.toUpperCase());
     }
 
     public static Scheme of(final String name) {
         return new Scheme(name);
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public int getPortNumber() {
-        return name.port;
+        return type.port;
     }
 
     private void validate(final String name) {
@@ -37,12 +41,12 @@ public class Scheme {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Scheme scheme = (Scheme) o;
-        return Objects.equals(name, scheme.name);
+        return Objects.equals(type, scheme.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(type);
     }
 
     public enum Type {
