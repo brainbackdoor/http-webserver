@@ -1,5 +1,9 @@
 package web.http;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.stream.Collectors.*;
 import static web.http.Scheme.Type;
 
 public class URL {
@@ -9,7 +13,7 @@ public class URL {
     private UserName userName;
     private Password password;
     private Path path;
-    private QueryString queryString;
+    private List<QueryString> queryStrings;
 
     public URL(String input) {
         String[] splitedInput = input.split("://");
@@ -17,6 +21,14 @@ public class URL {
         if(isRequiredToUserData()){
             setUserData(splitedInput);
         }
+        if(existQueryString(splitedInput)) {
+            String[] queryStrings = splitedInput[1].split("\\?")[1].split("&");
+            this.queryStrings = Arrays.stream(queryStrings).map(QueryString::new).collect(toList());
+        }
+    }
+
+    private boolean existQueryString(String[] splitedInput) {
+        return splitedInput[1].contains("?");
     }
 
     private void setUserData(String[] detachedScheme) {
@@ -53,5 +65,9 @@ public class URL {
 
     public Password getPassword() {
         return password;
+    }
+
+    public List<QueryString> getQueryStrings() {
+        return queryStrings;
     }
 }

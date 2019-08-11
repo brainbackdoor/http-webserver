@@ -50,5 +50,13 @@ class URLTest {
         assertThat(url.getPassword()).isEqualTo(new Password());
     }
 
-    //TODO: QueryString은 '?' 문자로 URL과 구분된다.
+    @Test
+    @DisplayName("QueryString은 '?' 문자로 URL과 구분된다.")
+    void setQueryString() {
+        String given = "http://www.joes-hardware.com/inventory-check.cgi?item=12731";
+
+        URL url = new URL(given);
+        assertThat(url.getQueryStrings().get(0).getKey()).isEqualTo("item");
+        assertThat(url.getQueryStrings().get(0).getValue()).isEqualTo("12731");
+    }
 }
