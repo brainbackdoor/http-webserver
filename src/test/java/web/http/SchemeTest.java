@@ -22,9 +22,6 @@ class SchemeTest {
         assertThrows(IllegalArgumentException.class, () -> Scheme.of(invalidName));
     }
 
-    //TODO: URL의 나머지 부분들과 첫번째 ':' 문자로 구분한다.
-
-
     @Test
     @DisplayName("스킴은 대소문자를 가리지 않는다.")
     void convertLowerCase() {
