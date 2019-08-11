@@ -1,6 +1,7 @@
 package web.http;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -66,6 +67,11 @@ public class Scheme {
 
         static Type of(final String name) {
             return Arrays.stream(values()).filter(type -> type.name().equals(name)).findFirst().get();
+        }
+
+        public static boolean isRequiredToUserData(Type scheme) {
+            List<Type> requiredUserData = Arrays.asList(FTP, RSTP, TELNET);
+            return requiredUserData.stream().filter(v -> v.equals(scheme)).findAny().isPresent();
         }
     }
 }

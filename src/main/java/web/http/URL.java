@@ -16,6 +16,10 @@ public class URL {
         this.scheme = Scheme.of(splitedInput[0]);
     }
 
+    public boolean isRequiredToUserData() {
+        return Type.isRequiredToUserData(getScheme());
+    }
+
     public Type getScheme() {
         return this.scheme.getType();
     }
