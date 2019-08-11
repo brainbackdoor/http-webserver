@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class SchemeTest {
 
     @Test
@@ -19,7 +20,15 @@ class SchemeTest {
 
     //TODO: URL의 나머지 부분들과 첫번째 ':' 문자로 구분한다.
 
-    //TODO: 스킴은 대소문자를 가리지 않는다.
+
+    @Test
+    @DisplayName("스킴은 대소문자를 가리지 않는다.")
+    void convertLowerCase() {
+        String lowerCase = "http";
+        String uppserCase = "HTTP";
+
+        assertThat(Scheme.of(lowerCase)).isEqualTo(Scheme.of(uppserCase));
+    }
 
     //TODO: 스킴에는 http, https, mailto, ftp, rstp, file, telnet 등이 있다.
 
