@@ -14,7 +14,6 @@ public class QueryString {
         validate(input);
         String[] splitedInput = input.split(DELIMITER_QUERY_STRING);
         value.put(splitedInput[0], splitedInput[1]);
-        this.value = value;
     }
 
     public String getKey() {

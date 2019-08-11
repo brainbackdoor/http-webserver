@@ -15,6 +15,9 @@ import static web.http.Scheme.Type;
 
 public class URL {
     public static final String DELIMITER_SCHEME = "://";
+    public static final String DELIMITER_USER_INFO = "@";
+    public static final String DELIMITER_QUERY_STRING = "&";
+    public static final String DELIMITER_QUERY_STRINGS = "?";
     private Scheme scheme;
     private UserInfo userInfo;
     private ConnectionInfo connectionInfo;
@@ -53,7 +56,7 @@ public class URL {
     }
 
     private String[] splitUserInfo(String[] data) {
-        return !isAnonymous(data[1]) ? data[1].split("@") : data;
+        return !isAnonymous(data[1]) ? data[1].split(DELIMITER_USER_INFO) : data;
     }
 
     private String splitPath(String s) {
@@ -61,15 +64,15 @@ public class URL {
     }
 
     private String[] splitQueryString(String s) {
-        return s.split("\\?")[1].split("&");
+        return s.split("\\?")[1].split(DELIMITER_QUERY_STRING);
     }
 
     private boolean existQueryString(String[] splitedInput) {
-        return splitedInput[1].contains("?");
+        return splitedInput[1].contains(DELIMITER_QUERY_STRINGS);
     }
 
     private boolean isAnonymous(String detachedScheme) {
-        return !detachedScheme.contains("@");
+        return !detachedScheme.contains(DELIMITER_USER_INFO);
     }
 
     public boolean isRequiredToUserData() {
