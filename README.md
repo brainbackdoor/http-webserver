@@ -1,3 +1,7 @@
+## URL
+
+Uniform Resource Locator 는 인터넷의 리소스를 가리키는 표준 이름이다. 
+
 ## URL 문법
 
 ```
