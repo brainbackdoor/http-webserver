@@ -5,16 +5,16 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class Parameter {
-
+public class QueryString {
     public static final String KEY_VALUE_PATTERN = "(.*)=(.*)";
-    public static final String DELIMITER_PARAMETER = "=";
+    public static final String DELIMITER_QUERY_STRING = "=";
     private Map<String, String> value = Maps.newHashMap();
 
-    public Parameter(String input) {
+    public QueryString(String input) {
         validate(input);
-        String[] splitedInput = input.split(DELIMITER_PARAMETER);
+        String[] splitedInput = input.split(DELIMITER_QUERY_STRING);
         value.put(splitedInput[0], splitedInput[1]);
+        this.value = value;
     }
 
     public String getKey() {
@@ -27,7 +27,7 @@ public class Parameter {
 
     private void validate(String input) {
         if (!isKeyValuePattern(input)) {
-            throw new IllegalArgumentException("Parameter가 key / value 쌍이 아닙니다.");
+            throw new IllegalArgumentException("QueryString이 key / value 쌍이 아닙니다.");
         }
     }
 
@@ -35,5 +35,4 @@ public class Parameter {
         Pattern pattern = Pattern.compile(KEY_VALUE_PATTERN);
         return pattern.matcher(input).find();
     }
-
 }
