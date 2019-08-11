@@ -30,7 +30,7 @@ class HostTest {
         String actualIp = "";
         String expected = "192.168.100.4";
 
-        if(!isIpAddress(actualDomain)) {
+        if (!isIpAddress(actualDomain)) {
             actualIp = domainNameService.findByDomain(actualDomain);
         }
 

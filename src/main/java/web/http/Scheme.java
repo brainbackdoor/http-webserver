@@ -22,7 +22,7 @@ public class Scheme {
     }
 
     private void validate(final String name) {
-        if(!isStartWithAlphabet(name)) {
+        if (!isStartWithAlphabet(name)) {
             throw new IllegalArgumentException("스킴은 알파벳으로 시작해야 한다.");
         }
     }
