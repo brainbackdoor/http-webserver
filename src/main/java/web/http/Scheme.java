@@ -8,12 +8,12 @@ public class Scheme {
     public static final String RULE_SCHEME_START_WITH_ALPHABET = "^[a-zA-Z]";
     private final Type name;
 
-    private Scheme(String name) {
+    private Scheme(final String name) {
         validate(name);
         this.name = Type.of(name.toUpperCase());
     }
 
-    public static Scheme of(String name) {
+    public static Scheme of(final String name) {
         return new Scheme(name);
     }
 
@@ -21,13 +21,13 @@ public class Scheme {
         return name.port;
     }
 
-    private void validate(String name) {
+    private void validate(final String name) {
         if(!isStartWithAlphabet(name)) {
             throw new IllegalArgumentException("스킴은 알파벳으로 시작해야 한다.");
         }
     }
 
-    private boolean isStartWithAlphabet(String name) {
+    private boolean isStartWithAlphabet(final String name) {
         Pattern pattern = Pattern.compile(RULE_SCHEME_START_WITH_ALPHABET);
         return pattern.matcher(name).find();
     }
@@ -56,11 +56,11 @@ public class Scheme {
 
         private int port;
 
-        Type(int port) {
+        Type(final int port) {
             this.port = port;
         }
 
-        static Type of(String name) {
+        static Type of(final String name) {
             return Arrays.stream(values()).filter(type -> type.name().equals(name)).findFirst().get();
         }
     }
