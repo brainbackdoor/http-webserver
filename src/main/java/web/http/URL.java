@@ -26,6 +26,7 @@ public class URL {
 
         this.host = setHost(splitedInput[1]);
         this.port = setPort(splitedInput[1]);
+        this.path = new Path(splitPath(splitedInput[1]));
 
         if (existQueryString(splitedInput)) {
             String[] queryStrings = splitQueryString(splitedInput[1]);
@@ -49,6 +50,10 @@ public class URL {
 
     private Host setHost(String s) {
         return Host.of(s.split("/")[0].split(":")[0]);
+    }
+
+    private String splitPath(String s) {
+        return s.split("\\?")[0];
     }
 
     private String[] splitQueryString(String s) {
@@ -106,5 +111,9 @@ public class URL {
 
     public Port getPort() {
         return port;
+    }
+
+    public Path getPath() {
+        return path;
     }
 }
