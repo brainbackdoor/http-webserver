@@ -16,7 +16,23 @@ class PathTest {
 
         Path path = new Path(givenPath);
 
-        assertThat(path.get(1)).isEqualTo(expectedFirstPath);
-        assertThat(path.get(2)).isEqualTo(expectedSecondPath);
+        assertThat(path.get(1)).isEqualTo(new PathCarving(expectedFirstPath));
+        assertThat(path.get(2)).isEqualTo(new PathCarving(expectedSecondPath));
+    }
+
+
+
+    @Test
+    @DisplayName("각 경로조각은 별도로 파라미터를 가질 수 있다.")
+    void setParameterSeveral() {
+        String givenPath = "/hammers;type=d/index.html;graphics=true";
+
+        Path path = new Path(givenPath);
+
+        assertThat(path.get(1).getParameter(0).getKey()).isEqualTo("type");
+        assertThat(path.get(1).getParameter(0).getValue()).isEqualTo("d");
+
+        assertThat(path.get(2).getParameter(0).getKey()).isEqualTo("graphics");
+        assertThat(path.get(2).getParameter(0).getValue()).isEqualTo("true");
     }
 }
