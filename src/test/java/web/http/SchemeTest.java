@@ -3,6 +3,7 @@ package web.http;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +43,13 @@ class SchemeTest {
         assertThat(scheme).isNotNull();
     }
 
-    //TODO: http는 80, https는 443 이 기본 포트값이다.
+    @ParameterizedTest
+    @CsvSource({"http,80", "https,443"})
+    @DisplayName("http는 80, https는 443 이 기본 포트값이다.")
+    void checkDefaultPortAboutSpecificScheme(String name, int port) {
+        Scheme scheme = Scheme.of(name);
+
+        assertThat(scheme.getPortNumber()).isEqualTo(port);
+    }
 
 }

@@ -17,6 +17,10 @@ public class Scheme {
         return new Scheme(name);
     }
 
+    public int getPortNumber() {
+        return name.port;
+    }
+
     private void validate(String name) {
         if(!isStartWithAlphabet(name)) {
             throw new IllegalArgumentException("스킴은 알파벳으로 시작해야 한다.");
