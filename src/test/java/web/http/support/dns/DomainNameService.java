@@ -1,4 +1,4 @@
-package support.dns;
+package web.http.support.dns;
 
 import com.google.common.collect.Maps;
 

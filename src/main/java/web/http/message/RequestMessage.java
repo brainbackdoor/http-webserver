@@ -8,12 +8,69 @@ package web.http.message;
 
 public class RequestMessage {
     private final RequestLine requestLine;
-    private final Header header;
+    private final Headers headers;
     private final EntityBody entityBody;
 
-    public RequestMessage(RequestLine requestLine, Header header, EntityBody entityBody) {
+    public RequestMessage(RequestLine requestLine, Headers headers, EntityBody entityBody) {
         this.requestLine = requestLine;
-        this.header = header;
+        this.headers = headers;
         this.entityBody = entityBody;
+    }
+
+    public RequestLine getRequestLine() {
+        return requestLine;
+    }
+
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    public EntityBody getEntityBody() {
+        return entityBody;
+    }
+
+    public static RequestMessageBuilder builder() {
+        return new RequestMessageBuilder();
+    }
+
+    public static final class RequestMessageBuilder {
+        private RequestLine requestLine;
+        private Headers headers;
+        private EntityBody entityBody;
+
+        private RequestMessageBuilder() {
+        }
+
+        public static RequestMessageBuilder aRequestMessage() {
+            return new RequestMessageBuilder();
+        }
+
+        public RequestMessageBuilder withRequestLine(RequestLine requestLine) {
+            this.requestLine = requestLine;
+            return this;
+        }
+
+        public RequestMessageBuilder withHeaders(Headers headers) {
+            this.headers = headers;
+            return this;
+        }
+
+        public RequestMessageBuilder withEntityBody(EntityBody entityBody) {
+            this.entityBody = entityBody;
+            return this;
+        }
+
+        public RequestMessage build() {
+            return new RequestMessage(requestLine, headers, entityBody);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "RequestMessage{" +
+                "requestLine=" + requestLine +
+                ", headers=" + headers +
+                ", entityBody=" + entityBody +
+                '}';
     }
 }

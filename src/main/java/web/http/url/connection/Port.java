@@ -25,4 +25,11 @@ public class Port {
     public int hashCode() {
         return Objects.hash(number);
     }
+
+    @Override
+    public String toString() {
+        return "Port{" +
+                "number=" + number +
+                '}';
+    }
 }

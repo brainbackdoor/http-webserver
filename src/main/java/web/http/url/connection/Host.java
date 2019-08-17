@@ -34,4 +34,11 @@ public class Host {
     public int hashCode() {
         return Objects.hash(address);
     }
+
+    @Override
+    public String toString() {
+        return "Host{" +
+                "address='" + address + '\'' +
+                '}';
+    }
 }

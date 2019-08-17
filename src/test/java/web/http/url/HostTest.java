@@ -2,13 +2,13 @@ package web.http.url;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import support.dns.DomainNameService;
+import web.http.support.dns.DomainNameService;
 import web.http.url.connection.Host;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static web.http.url.connection.Host.isIpAddress;
 
-class HostTest {
+public class HostTest {
     private DomainNameService domainNameService = new DomainNameService();
 
     @Test

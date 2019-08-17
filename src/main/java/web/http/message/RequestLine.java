@@ -3,7 +3,7 @@ package web.http.message;
 import java.util.Objects;
 
 public class RequestLine {
-    public static final String DELIMETER_REQUEST_LINE = " ";
+    public static final String DELIMITER_REQUEST_LINE = " ";
     private final Method method;
     private final RequestURL requestURL;
     private final Version version;
@@ -15,7 +15,7 @@ public class RequestLine {
     }
 
     public static RequestLine of(String input) {
-        String[] splitValue = input.split(DELIMETER_REQUEST_LINE);
+        String[] splitValue = input.split(DELIMITER_REQUEST_LINE);
         Method method = Method.of(splitValue[0]);
         RequestURL requestURL = new RequestURL(splitValue[1]);
         Version version = Version.of(splitValue[2]);

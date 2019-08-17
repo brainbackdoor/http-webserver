@@ -44,4 +44,12 @@ public class PathCarving {
     public int hashCode() {
         return Objects.hash(value, parameters);
     }
+
+    @Override
+    public String toString() {
+        return "PathCarving{" +
+                "value='" + value + '\'' +
+                ", parameters=" + parameters +
+                '}';
+    }
 }

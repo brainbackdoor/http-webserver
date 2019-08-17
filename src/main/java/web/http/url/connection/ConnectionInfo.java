@@ -67,4 +67,12 @@ public class ConnectionInfo {
     public int hashCode() {
         return Objects.hash(host, port);
     }
+
+    @Override
+    public String toString() {
+        return "ConnectionInfo{" +
+                "host=" + host +
+                ", port=" + port +
+                '}';
+    }
 }

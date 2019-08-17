@@ -2,6 +2,8 @@ package web.http.message;
 
 import java.util.Arrays;
 
+import static web.http.message.Header.Type.CONTENT_LENGTH;
+
 public class Header {
 
     public static final String DELIMITER_HEADER = ": ";
@@ -18,6 +20,14 @@ public class Header {
         return new Header(Type.of(splits[0]), splits[1]);
     }
 
+    public boolean isContentLength() {
+        return this.type.value.equals(CONTENT_LENGTH);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
     public enum Type {
 
         // 일반 헤더
@@ -27,10 +37,10 @@ public class Header {
         CACHE_CONTROL("Cache-Control"), PRAGMA("Pragma"),
 
         // 요청 헤더
-        CLIENT_IP("Client-IP"), FROM("From"), HOST("Host"), REFERER("Referer"),
+        CLIENT_IP("Client-IP"), FROM("From"), HOST("Host"), REFERER("Referer"), USER_AGENT("User-Agent"),
 
         // Accept 관련 헤더
-        ACCEPT("Accept"), ACCEPT_CHARSET("Accept-Charset"), ACCEPT_ENCODING("Accept-Encoding"),
+        ACCEPT("Accept"), ACCEPT_CHARSET("Accept-Charset"), ACCEPT_ENCODING("Accept-Encoding"), ACCEPT_LANGUAGE("Accept-Language"),
 
         //조건부 요청 헤더
         EXPECT("Expect"), IF_MATCH("If-Match"), IF_MODIFIED_SINCE("If-Modified-Since"),
@@ -73,5 +83,13 @@ public class Header {
                     .findFirst()
                     .orElseThrow(IllegalArgumentException::new);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Header{" +
+                "type=" + type +
+                ", value='" + value + '\'' +
+                '}';
     }
 }
