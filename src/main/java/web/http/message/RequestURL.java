@@ -1,6 +1,9 @@
 package web.http.message;
 
+import web.http.url.Path;
 import web.http.url.URL;
+import web.http.url.connection.Host;
+import web.http.url.connection.Port;
 
 import java.util.Objects;
 
@@ -9,6 +12,18 @@ public class RequestURL {
 
     public RequestURL(String input) {
         this.url = new URL(input);
+    }
+
+    public Host getHost() {
+        return url.getHost();
+    }
+
+    public Port getPort() {
+        return url.getPort();
+    }
+
+    public Path getPath() {
+        return url.getPath();
     }
 
     @Override
