@@ -2,8 +2,6 @@ package web.http.url;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import web.http.url.PathCarving;
-import web.http.url.URL;
 import web.http.url.connection.Host;
 import web.http.url.connection.Port;
 import web.http.url.user.Password;
