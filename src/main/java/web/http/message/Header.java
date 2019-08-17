@@ -21,7 +21,7 @@ public class Header {
     }
 
     public boolean isContentLength() {
-        return this.type.value.equals(CONTENT_LENGTH);
+        return this.type.equals(CONTENT_LENGTH);
     }
 
     public String getValue() {

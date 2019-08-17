@@ -1,12 +1,13 @@
 package web.http.message;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.*;
 
 public class RequestMessageFactory {
 
@@ -31,12 +32,18 @@ public class RequestMessageFactory {
         return RequestLine.of(reader.readLine());
     }
 
-    private static Headers createdRequestHeaders(BufferedReader reader){
+    private static Headers createdRequestHeaders(BufferedReader reader) throws IOException {
         return Headers.of(extractHeaders(reader));
     }
 
-    private static List<String> extractHeaders(BufferedReader reader) {
-        return reader.lines().collect(toList()).subList(0, reader.lines().toArray().length);
+    private static List<String> extractHeaders(BufferedReader reader) throws IOException {
+        List<String> headers = new ArrayList<>();
+        String line = reader.readLine();
+        while(!StringUtils.EMPTY.equals(line)) {
+            headers.add(line);
+            line = reader.readLine();
+        }
+        return headers;
     }
 
     private static EntityBody createRequestBody(BufferedReader reader, int contentLength) throws IOException {

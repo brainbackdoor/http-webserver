@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class EntityBody {
@@ -18,17 +19,31 @@ public class EntityBody {
         return new EntityBody(ParameterParser.parseParameter(rawParameters));
     }
 
+    public String get(String key) {
+        return parameters.stream().filter(v -> v.key.equals(key)).findFirst().get().value;
+    }
+
     public static class Parameter {
         private String key;
         private String value;
 
-        public String getValue() {
-            return value;
-        }
-
         public Parameter(String key, String value) {
             this.key = key;
             this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Parameter parameter = (Parameter) o;
+            return Objects.equals(key, parameter.key) &&
+                    Objects.equals(value, parameter.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key, value);
         }
     }
 
@@ -36,7 +51,6 @@ public class EntityBody {
         public static final String EQUALS = "=";
         public static final String AMPERSAND = "&";
         public static final int QUERY_MIN_SIZE = 2;
-        public static final int QUERY_LIST_PREDICATE = 1;
 
         private static List<Parameter> parseParameter(String queryString) {
             return Arrays.stream(queryString.split(AMPERSAND))
@@ -54,5 +68,18 @@ public class EntityBody {
         private static String[] parseQuery(String it) {
             return it.split(EQUALS);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EntityBody that = (EntityBody) o;
+        return Objects.equals(parameters, that.parameters);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(parameters);
     }
 }

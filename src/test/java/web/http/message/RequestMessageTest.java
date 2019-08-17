@@ -30,12 +30,20 @@ class RequestMessageTest {
         RequestLine expectedRequestLine = RequestLine.of("GET /index.html HTTP/1.1");
 
         InputStream in = FileLoader.load("Http_GET_index.txt");
-        RequestMessage message = RequestMessageFactory.of(in) ;
+        RequestMessage message = RequestMessageFactory.of(in);
 
         assertThat(message.getRequestLine()).isEqualTo(expectedRequestLine);
         assertThat(message.getEntityBody()).isEqualTo(null);
     }
 
-    //TODO: Header는 EntityBody에 대한 정보를 준다.
-    //TODO: Header나 EntityBody가 없더라도 HTTP Header 집합은 항상 빈 줄로 끝나야 한다.
+    @Test
+    @DisplayName("Header는 EntityBody에 대한 정보를 준다. (Content-Length)")
+    void entityBody() throws IOException {
+        EntityBody expected = EntityBody.of("userId=javajigi&password=password&name=JaeSung");
+        InputStream in = FileLoader.load("Http_POST.txt");
+        RequestMessage message = RequestMessageFactory.of(in);
+
+        assertThat(message.getEntityBody()).isEqualTo(expected);
+        assertThat(message.getEntityBody().get("userId")).isEqualTo("javajigi");
+    }
 }
