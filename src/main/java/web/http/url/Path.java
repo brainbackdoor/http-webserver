@@ -10,11 +10,8 @@ public class Path {
     public static final String DELIMITER_PATH = "/";
     private List<PathCarving> values;
 
-
     private Path(String value) {
-        List<String> splitedValues = Arrays.asList(value.split(DELIMITER_PATH));
-
-        this.values = splitedValues.stream().map(PathCarving::new).collect(toList());
+        this.values = extract(value).stream().map(PathCarving::new).collect(toList());
     }
 
     public static Path of(String value) {
@@ -23,6 +20,10 @@ public class Path {
 
     public PathCarving get(int index) {
         return values.get(index);
+    }
+
+    private List<String> extract(String value) {
+        return Arrays.asList(value.split(DELIMITER_PATH));
     }
 
     @Override

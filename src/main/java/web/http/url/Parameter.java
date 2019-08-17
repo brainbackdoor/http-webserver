@@ -1,28 +1,28 @@
 package web.http.url;
 
-import com.google.common.collect.Maps;
-
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Parameter {
 
     public static final String KEY_VALUE_PATTERN = "(.*)=(.*)";
     public static final String DELIMITER_PARAMETER = "=";
-    private Map<String, String> value = Maps.newHashMap();
+
+    private final String key;
+    private final String value;
 
     public Parameter(String input) {
         validate(input);
-        String[] splitedInput = input.split(DELIMITER_PARAMETER);
-        value.put(splitedInput[0], splitedInput[1]);
+        String[] splits = input.split(DELIMITER_PARAMETER);
+        this.key = splits[0];
+        this.value = splits[1];
     }
 
     public String getKey() {
-        return String.valueOf(value.keySet().toArray()[0]);
+        return this.key;
     }
 
     public String getValue() {
-        return String.valueOf(value.values().toArray()[0]);
+        return this.value;
     }
 
     private void validate(String input) {

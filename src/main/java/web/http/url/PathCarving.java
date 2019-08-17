@@ -13,14 +13,22 @@ public class PathCarving {
     private List<Parameter> parameters;
 
     public PathCarving(String input) {
-        List<String> splitedValue = new ArrayList<>(Arrays.asList(input.split(DELIMITER_PATH_CARVING)));
-        value = splitedValue.get(0);
-        splitedValue.remove(value);
-        this.parameters = splitedValue.stream().map(Parameter::new).collect(toList());
+        this.parameters = extract(input).stream().map(Parameter::new).collect(toList());
     }
 
     public Parameter getParameter(int index) {
         return parameters.get(index);
+    }
+
+    private List<String> extract(String input) {
+        List<String> splits = split(input);
+        value = splits.get(0);
+        splits.remove(value);
+        return splits;
+    }
+
+    private ArrayList<String> split(String input) {
+        return new ArrayList<>(Arrays.asList(input.split(DELIMITER_PATH_CARVING)));
     }
 
     @Override

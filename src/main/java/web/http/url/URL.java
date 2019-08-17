@@ -26,21 +26,68 @@ public class URL {
     private List<QueryString> queryStrings;
 
     public URL(String input) {
-        if(isAbsolutePath(input)) {
-            String[] data = input.split(DELIMITER_SCHEME);
-            this.scheme = Scheme.of(data[0]);
-
-            data = extractUserInfo(data);
-
-            this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
-            this.path = Path.of(splitPath(data[1]));
-
-            extractQueryStrings(data);
+        if (isAbsolutePath(input)) {
+            absolutePath(input);
         } else {
             connectionInfo = ConnectionInfo.of();
             path = Path.of(input);
         }
+    }
 
+    public boolean isRequiredToUserData() {
+        return Type.isRequiredToUserData(getScheme());
+    }
+
+    public Type getScheme() {
+        return this.scheme.getType();
+    }
+
+    public UserName getUserName() {
+        return userInfo.getUserName();
+    }
+
+    public Password getPassword() {
+        return userInfo.getPassword();
+    }
+
+    public List<QueryString> getQueryStrings() {
+        return queryStrings;
+    }
+
+    public Host getHost() {
+        return connectionInfo.getHost();
+    }
+
+    public Port getPort() {
+        return connectionInfo.getPort();
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    private void absolutePath(String input) {
+        String[] data = extractScheme(input);
+        data = extractUserInfo(data);
+        data = extractConnectionInfo(data);
+        data = extractPath(data);
+        extractQueryStrings(data);
+    }
+
+    private String[] extractPath(String[] data) {
+        this.path = Path.of(splitPath(data[1]));
+        return data;
+    }
+
+    private String[] extractConnectionInfo(String[] data) {
+        this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
+        return data;
+    }
+
+    private String[] extractScheme(String input) {
+        String[] data = input.split(DELIMITER_SCHEME);
+        this.scheme = Scheme.of(data[0]);
+        return data;
     }
 
     private boolean isAbsolutePath(String data) {
@@ -83,38 +130,6 @@ public class URL {
 
     private boolean isAnonymous(String detachedScheme) {
         return !detachedScheme.contains(DELIMITER_USER_INFO);
-    }
-
-    public boolean isRequiredToUserData() {
-        return Type.isRequiredToUserData(getScheme());
-    }
-
-    public Type getScheme() {
-        return this.scheme.getType();
-    }
-
-    public UserName getUserName() {
-        return userInfo.getUserName();
-    }
-
-    public Password getPassword() {
-        return userInfo.getPassword();
-    }
-
-    public List<QueryString> getQueryStrings() {
-        return queryStrings;
-    }
-
-    public Host getHost() {
-        return connectionInfo.getHost();
-    }
-
-    public Port getPort() {
-        return connectionInfo.getPort();
-    }
-
-    public Path getPath() {
-        return path;
     }
 
     @Override

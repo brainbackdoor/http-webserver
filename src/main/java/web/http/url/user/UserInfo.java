@@ -2,7 +2,7 @@ package web.http.url.user;
 
 public class UserInfo {
     public static final String DELIMITER_USER_INFO = "@";
-    public static final String DEVIDE_USERNAME_PASSWORD = ":";
+    public static final String DIVIDE_USERNAME_PASSWORD = ":";
     private UserName userName;
     private Password password;
 
@@ -24,7 +24,7 @@ public class UserInfo {
     }
 
     private static String[] splitByColon(String userDatum) {
-        return userDatum.split(DEVIDE_USERNAME_PASSWORD);
+        return userDatum.split(DIVIDE_USERNAME_PASSWORD);
     }
 
     private static String[] getUserData(String s) {
