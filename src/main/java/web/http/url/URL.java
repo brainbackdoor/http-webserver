@@ -9,6 +9,7 @@ import web.http.url.user.UserName;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.*;
 import static web.http.url.Scheme.Type;
@@ -25,16 +26,25 @@ public class URL {
     private List<QueryString> queryStrings;
 
     public URL(String input) {
-        String[] data = input.split(DELIMITER_SCHEME);
+        if(isAbsolutePath(input)) {
+            String[] data = input.split(DELIMITER_SCHEME);
+            this.scheme = Scheme.of(data[0]);
 
-        this.scheme = Scheme.of(data[0]);
+            data = extractUserInfo(data);
 
-        data = extractUserInfo(data);
+            this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
+            this.path = Path.of(splitPath(data[1]));
 
-        this.connectionInfo = ConnectionInfo.of(scheme, data[1]);
-        this.path = Path.of(splitPath(data[1]));
+            extractQueryStrings(data);
+        } else {
+            connectionInfo = ConnectionInfo.of();
+            path = Path.of(input);
+        }
 
-        extractQueryStrings(data);
+    }
+
+    private boolean isAbsolutePath(String data) {
+        return data.contains(DELIMITER_SCHEME);
     }
 
     private String[] extractUserInfo(String[] data) {
@@ -105,5 +115,33 @@ public class URL {
 
     public Path getPath() {
         return path;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        URL url = (URL) o;
+        return Objects.equals(scheme, url.scheme) &&
+                Objects.equals(userInfo, url.userInfo) &&
+                Objects.equals(connectionInfo, url.connectionInfo) &&
+                Objects.equals(path, url.path) &&
+                Objects.equals(queryStrings, url.queryStrings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scheme, userInfo, connectionInfo, path, queryStrings);
+    }
+
+    @Override
+    public String toString() {
+        return "URL{" +
+                "scheme=" + scheme +
+                ", userInfo=" + userInfo +
+                ", connectionInfo=" + connectionInfo +
+                ", path=" + path +
+                ", queryStrings=" + queryStrings +
+                '}';
     }
 }

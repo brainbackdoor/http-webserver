@@ -2,13 +2,22 @@ package web.http.url.connection;
 
 import web.http.url.Scheme;
 
+import java.util.Objects;
+
+import static web.http.url.Scheme.Type.HTTP;
+
 public class ConnectionInfo {
+    public static final String DEFAULT_HOST = "127.0.0.1";
     private Host host;
     private Port port;
 
     private ConnectionInfo(Host host, Port port) {
         this.host = host;
         this.port = port;
+    }
+
+    public static ConnectionInfo of() {
+        return new ConnectionInfo(setHost(DEFAULT_HOST), setPort(Scheme.of(), HTTP.name()));
     }
 
     public static ConnectionInfo of(Scheme scheme, String data) {
@@ -43,5 +52,19 @@ public class ConnectionInfo {
 
     public Port getPort() {
         return port;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConnectionInfo that = (ConnectionInfo) o;
+        return Objects.equals(host, that.host) &&
+                Objects.equals(port, that.port);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(host, port);
     }
 }

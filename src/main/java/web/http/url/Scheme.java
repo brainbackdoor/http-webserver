@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import static web.http.url.Scheme.Type.HTTP;
+
 public class Scheme {
     public static final String RULE_SCHEME_START_WITH_ALPHABET = "^[a-zA-Z]";
     private final Type type;
@@ -12,6 +14,10 @@ public class Scheme {
     private Scheme(final String type) {
         validate(type);
         this.type = Type.of(type.toUpperCase());
+    }
+
+    public static Scheme of() {
+        return of(HTTP.name());
     }
 
     public static Scheme of(final String name) {
