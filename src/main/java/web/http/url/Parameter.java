@@ -1,18 +1,19 @@
-package web.http;
+package web.http.url;
 
 import com.google.common.collect.Maps;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class QueryString {
+public class Parameter {
+
     public static final String KEY_VALUE_PATTERN = "(.*)=(.*)";
-    public static final String DELIMITER_QUERY_STRING = "=";
+    public static final String DELIMITER_PARAMETER = "=";
     private Map<String, String> value = Maps.newHashMap();
 
-    public QueryString(String input) {
+    public Parameter(String input) {
         validate(input);
-        String[] splitedInput = input.split(DELIMITER_QUERY_STRING);
+        String[] splitedInput = input.split(DELIMITER_PARAMETER);
         value.put(splitedInput[0], splitedInput[1]);
     }
 
@@ -26,7 +27,7 @@ public class QueryString {
 
     private void validate(String input) {
         if (!isKeyValuePattern(input)) {
-            throw new IllegalArgumentException("QueryString이 key / value 쌍이 아닙니다.");
+            throw new IllegalArgumentException("Parameter가 key / value 쌍이 아닙니다.");
         }
     }
 
@@ -34,4 +35,5 @@ public class QueryString {
         Pattern pattern = Pattern.compile(KEY_VALUE_PATTERN);
         return pattern.matcher(input).find();
     }
+
 }

@@ -1,8 +1,8 @@
-package web.http;
+package web.http.url;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import web.http.user.Password;
+import web.http.url.user.Password;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

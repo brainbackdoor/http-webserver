@@ -1,17 +1,17 @@
-package web.http;
+package web.http.url;
 
-import web.http.connection.ConnectionInfo;
-import web.http.connection.Host;
-import web.http.connection.Port;
-import web.http.user.Password;
-import web.http.user.UserInfo;
-import web.http.user.UserName;
+import web.http.url.connection.ConnectionInfo;
+import web.http.url.connection.Host;
+import web.http.url.connection.Port;
+import web.http.url.user.Password;
+import web.http.url.user.UserInfo;
+import web.http.url.user.UserName;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.*;
-import static web.http.Scheme.Type;
+import static web.http.url.Scheme.Type;
 
 public class URL {
     public static final String DELIMITER_SCHEME = "://";

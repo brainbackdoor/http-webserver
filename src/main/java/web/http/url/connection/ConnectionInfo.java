@@ -1,6 +1,6 @@
-package web.http.connection;
+package web.http.url.connection;
 
-import web.http.Scheme;
+import web.http.url.Scheme;
 
 public class ConnectionInfo {
     private Host host;

@@ -1,4 +1,4 @@
-package web.http.user;
+package web.http.url.user;
 
 import java.util.Objects;
 

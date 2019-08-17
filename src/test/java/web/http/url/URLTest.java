@@ -1,14 +1,16 @@
-package web.http;
+package web.http.url;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import web.http.connection.Host;
-import web.http.connection.Port;
-import web.http.user.Password;
-import web.http.user.UserName;
+import web.http.url.PathCarving;
+import web.http.url.URL;
+import web.http.url.connection.Host;
+import web.http.url.connection.Port;
+import web.http.url.user.Password;
+import web.http.url.user.UserName;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static web.http.Scheme.Type;
+import static web.http.url.Scheme.Type;
 
 class URLTest {
 

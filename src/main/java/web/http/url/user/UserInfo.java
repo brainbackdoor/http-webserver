@@ -1,4 +1,4 @@
-package web.http.user;
+package web.http.url.user;
 
 public class UserInfo {
     public static final String DELIMITER_USER_INFO = "@";
