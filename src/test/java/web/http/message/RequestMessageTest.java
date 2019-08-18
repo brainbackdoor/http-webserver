@@ -39,11 +39,11 @@ class RequestMessageTest {
     @Test
     @DisplayName("Header는 EntityBody에 대한 정보를 준다. (Content-Length)")
     void entityBody() throws IOException {
-        EntityBody expected = EntityBody.of("userId=javajigi&password=password&name=JaeSung");
+        EntityBody expected = EntityBody.of("userId=brainbackdoor&password=password&name=DongGyu");
         InputStream in = FileLoader.load("Http_POST.txt");
         RequestMessage message = RequestMessageFactory.of(in);
 
         assertThat(message.getEntityBody()).isEqualTo(expected);
-        assertThat(message.getEntityBody().get("userId")).isEqualTo("javajigi");
+        assertThat(message.getEntityBody().get("userId")).isEqualTo("brainbackdoor");
     }
 }

@@ -45,6 +45,14 @@ public class EntityBody {
         public int hashCode() {
             return Objects.hash(key, value);
         }
+
+        @Override
+        public String toString() {
+            return "Parameter{" +
+                    "key='" + key + '\'' +
+                    ", value='" + value + '\'' +
+                    '}';
+        }
     }
 
     private static class ParameterParser {
@@ -81,5 +89,12 @@ public class EntityBody {
     @Override
     public int hashCode() {
         return Objects.hash(parameters);
+    }
+
+    @Override
+    public String toString() {
+        return "EntityBody{" +
+                "parameters=" + parameters +
+                '}';
     }
 }
