@@ -1,8 +1,8 @@
-package web.http.message;
+package web.http.message.common;
 
 import java.util.Arrays;
 
-import static web.http.message.Header.Type.CONTENT_LENGTH;
+import static web.http.message.common.Header.Type.CONTENT_LENGTH;
 
 public class Header {
 

@@ -1,4 +1,7 @@
-package web.http.message;
+package web.http.message.request;
+
+import web.http.message.StartLine;
+import web.http.message.common.Version;
 
 import java.util.Objects;
 

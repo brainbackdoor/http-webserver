@@ -2,6 +2,7 @@ package web.http.message;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import web.http.message.request.RequestURL;
 import web.http.url.Path;
 import web.http.url.URL;
 import web.http.url.connection.Host;

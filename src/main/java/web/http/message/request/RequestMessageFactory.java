@@ -1,4 +1,6 @@
-package web.http.message;
+package web.http.message.request;
+
+import web.http.message.MessageFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;

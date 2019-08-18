@@ -1,4 +1,4 @@
-package web.http.message;
+package web.http.message.common;
 
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ public class EntityBody {
 
     public static EntityBody of(String rawParameters) {
         List<Parameter> parameters = ParameterParser.parseParameter(rawParameters);
-        if (parameters.size() == 0) {
+        if (isRaw(parameters)) {
             parameters.add(new Parameter(DEFAULT_KEY, rawParameters));
         }
         return new EntityBody(parameters);
@@ -27,6 +27,10 @@ public class EntityBody {
 
     public String get(String key) {
         return parameters.stream().filter(v -> v.key.equals(key)).findFirst().get().value;
+    }
+
+    private static boolean isRaw(List<Parameter> parameters) {
+        return parameters.size() == 0;
     }
 
     public static class Parameter {
