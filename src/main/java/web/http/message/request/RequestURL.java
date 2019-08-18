@@ -1,4 +1,4 @@
-package web.http.message;
+package web.http.message.request;
 
 import web.http.url.Path;
 import web.http.url.URL;

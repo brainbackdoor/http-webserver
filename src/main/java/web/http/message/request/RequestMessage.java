@@ -1,4 +1,9 @@
-package web.http.message;
+package web.http.message.request;
+
+import web.http.message.common.EntityBody;
+import web.http.message.common.Headers;
+import web.http.message.MessageBuilder;
+import web.http.message.StartLine;
 
 /**
  * 요청 메시지는 웹 서버에 어떤 동작을 요구한다.

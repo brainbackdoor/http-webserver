@@ -3,14 +3,20 @@ package web.http.message;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import web.http.message.common.EntityBody;
+import web.http.message.common.Headers;
+import web.http.message.response.ResponseLine;
+import web.http.message.response.ResponseMessage;
+import web.http.message.response.ResponseMessageFactory;
+import web.http.message.response.StatusCode;
 import web.http.support.file.FileLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static web.http.message.EntityBody.DEFAULT_KEY;
-import static web.http.message.Version.HTTP_1_1;
+import static web.http.message.common.EntityBody.DEFAULT_KEY;
+import static web.http.message.common.Version.HTTP_1_1;
 
 class ResponseMessageTest {
 

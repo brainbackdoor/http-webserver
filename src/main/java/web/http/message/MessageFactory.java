@@ -1,6 +1,8 @@
 package web.http.message;
 
 import org.apache.commons.lang3.StringUtils;
+import web.http.message.common.EntityBody;
+import web.http.message.common.Headers;
 
 import java.io.BufferedReader;
 import java.io.IOException;

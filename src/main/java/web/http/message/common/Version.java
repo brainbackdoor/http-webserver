@@ -1,4 +1,4 @@
-package web.http.message;
+package web.http.message.common;
 
 import java.util.Arrays;
 

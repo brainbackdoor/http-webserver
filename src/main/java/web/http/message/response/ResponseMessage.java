@@ -1,4 +1,9 @@
-package web.http.message;
+package web.http.message.response;
+
+import web.http.message.common.EntityBody;
+import web.http.message.common.Headers;
+import web.http.message.MessageBuilder;
+import web.http.message.StartLine;
 
 public class ResponseMessage {
     private StartLine responseLine;

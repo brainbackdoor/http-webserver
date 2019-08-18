@@ -4,13 +4,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import web.http.message.common.EntityBody;
+import web.http.message.common.Headers;
+import web.http.message.request.*;
 import web.http.support.file.FileLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static web.http.message.Version.HTTP_1_1;
+import static web.http.message.common.Version.HTTP_1_1;
 
 class RequestMessageTest {
 

@@ -1,5 +1,8 @@
 package web.http.message;
 
+import web.http.message.common.EntityBody;
+import web.http.message.common.Headers;
+
 public interface MessageBuilder {
     MessageBuilder withStartLine(StartLine line);
 

@@ -2,6 +2,10 @@ package web.http.message;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import web.http.message.common.Version;
+import web.http.message.request.Method;
+import web.http.message.request.RequestLine;
+import web.http.message.request.RequestURL;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
