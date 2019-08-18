@@ -2,22 +2,22 @@ package web.http.message;
 
 /**
  * 요청 메시지는 웹 서버에 어떤 동작을 요구한다.
- *
+ * <p>
  * Created by brainbackdoor on 2019-08-18.
  */
 
 public class RequestMessage {
-    private final RequestLine requestLine;
+    private final StartLine requestLine;
     private final Headers headers;
     private final EntityBody entityBody;
 
-    public RequestMessage(RequestLine requestLine, Headers headers, EntityBody entityBody) {
+    public RequestMessage(StartLine requestLine, Headers headers, EntityBody entityBody) {
         this.requestLine = requestLine;
         this.headers = headers;
         this.entityBody = entityBody;
     }
 
-    public RequestLine getRequestLine() {
+    public StartLine getRequestLine() {
         return requestLine;
     }
 
@@ -33,29 +33,25 @@ public class RequestMessage {
         return new RequestMessageBuilder();
     }
 
-    public static final class RequestMessageBuilder {
-        private RequestLine requestLine;
+    public static final class RequestMessageBuilder implements MessageBuilder {
+        private StartLine requestLine;
         private Headers headers;
         private EntityBody entityBody;
 
         private RequestMessageBuilder() {
         }
 
-        public static RequestMessageBuilder aRequestMessage() {
-            return new RequestMessageBuilder();
-        }
-
-        public RequestMessageBuilder withRequestLine(RequestLine requestLine) {
-            this.requestLine = requestLine;
+        public MessageBuilder withStartLine(StartLine line) {
+            this.requestLine = line;
             return this;
         }
 
-        public RequestMessageBuilder withHeaders(Headers headers) {
+        public MessageBuilder withHeaders(Headers headers) {
             this.headers = headers;
             return this;
         }
 
-        public RequestMessageBuilder withEntityBody(EntityBody entityBody) {
+        public MessageBuilder withEntityBody(EntityBody entityBody) {
             this.entityBody = entityBody;
             return this;
         }

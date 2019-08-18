@@ -2,7 +2,7 @@ package web.http.message;
 
 import java.util.Objects;
 
-public class ResponseLine {
+public class ResponseLine implements StartLine {
     private static final String DELIMITER_RESPONSE_LINE = " ";
     private Version version;
     private StatusCode statusCode;

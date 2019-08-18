@@ -3,20 +3,26 @@ package web.http.message;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class EntityBody {
-    private List<Parameter> parameters;
+    public static final String DEFAULT_KEY = "";
+    private List<Parameter> parameters = new ArrayList<>();
 
     public EntityBody(List<Parameter> parameters) {
         this.parameters = parameters;
     }
 
     public static EntityBody of(String rawParameters) {
-        return new EntityBody(ParameterParser.parseParameter(rawParameters));
+        List<Parameter> parameters = ParameterParser.parseParameter(rawParameters);
+        if (parameters.size() == 0) {
+            parameters.add(new Parameter(DEFAULT_KEY, rawParameters));
+        }
+        return new EntityBody(parameters);
     }
 
     public String get(String key) {

@@ -2,7 +2,7 @@ package web.http.message;
 
 import java.util.Objects;
 
-public class RequestLine {
+public class RequestLine implements StartLine {
     public static final String DELIMITER_REQUEST_LINE = " ";
     private final Method method;
     private final RequestURL requestURL;

@@ -24,7 +24,7 @@ class HeaderTest {
     @MethodSource("exceptionHeader")
     @DisplayName("등록되지 않은 헤더타입의 경우")
     void exception(String input) {
-        assertThrows(IllegalArgumentException.class,() ->  Header.of(input));
+        assertThrows(IllegalArgumentException.class, () -> Header.of(input));
     }
 
     private static Stream<Arguments> parseHeader() {
