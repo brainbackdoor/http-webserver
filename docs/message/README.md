@@ -13,16 +13,6 @@
 - 여러 HTTP 헤더들은 무슨 일을 하는가
 
 ---
-고려할 점
-
-- RESTful에서는 POST와 PUT 역할이 이 책의 가이드와 다르다. (보통 PUT은 수정, POST는 생성으로 많이 사용)
-  PUT은 URI가 존재하면 update 없으면 insert를 한다.
-  POST는 URI가 collection일 경우 collection에 추가하고 element일 경우에는 해당 URI를 collection으로 간주하여 그 밑에 들어가도록 함
-  간단히 말해 PUT으로 생성을 하려면 요청하는 쪽에서 ID를 알고 있어야 하며, 
-  POST로 생성을 하려면 ID를 모르는 상태에서 URI에 collection을 지정해야 함.
-  "PUT /articles/1" 하면 1번 글이 생성되고, "POST /articles" 하면 서버에서 할당한 번호의 글이 생성됨
-
----
 
 ## HTTP Message
 
