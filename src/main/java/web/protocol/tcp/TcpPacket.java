@@ -1,9 +1,7 @@
-package web.protocol;
+package web.protocol.tcp;
 
 import org.pcap4j.packet.namednumber.TcpOptionKind;
-import web.protocol.tcp.Port;
-import web.protocol.tcp.TcpPort;
-import web.protocol.tcp.TransportPacket;
+import web.protocol.Packet;
 
 import java.io.Serializable;
 import java.util.Arrays;
