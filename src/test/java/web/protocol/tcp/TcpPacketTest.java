@@ -39,9 +39,24 @@ class TcpPacketTest extends TcpPacketHelper {
 
         // then
         assertThat(rawData).isEqualTo(result);
-
-
     }
+
+    // TODO: TCP 3 way handshake로 연결한다.
+
+    // TODO: Port Open을 확인한다.
+
+    // TODO: 웹 요청 패킷을 pcap 파일로 저장한다.
+
+    // TODO: DNS Packet을 전송한다.
+
+    // TODO: DNS Packet을 통해 URL에 해당하는 IP 정보를 알아온다.
+
+    // TODO: ICMP echo request를 전송한다.
+
+    // TODO: traceroute를 구현한다.
+
+    // TODO: ARP를 이용하여 공유기 주소를 알아온다.
+
 
     @AfterEach
     void tearDown() throws NotOpenException {
