@@ -41,7 +41,10 @@ public class TcpPacket implements TransportPacket {
 
     @Override
     public byte[] getRawData() {
-        return new byte[0];
+        byte[] rawData = payload.getRawData();
+        byte[] copy = new byte[rawData.length];
+        System.arraycopy(rawData, 0, copy, 0, copy.length);
+        return copy;
     }
 
     @Override

@@ -21,7 +21,11 @@ public class SimplePacket implements Packet {
 
     @Override
     public byte[] getRawData() {
-        return new byte[0];
+        byte[] bytes = new byte[50];
+        bytes[0] = 1;
+        bytes[1] = 2;
+        bytes[2] = 3;
+        return bytes;
     }
 
     @Override
