@@ -6,6 +6,7 @@ import web.protocol.tcp.TcpPort;
 import web.protocol.tcp.TransportPacket;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class TcpPacket implements TransportPacket {
 
     private final TcpHeader header;
     private final Packet payload;
+
 
     public TcpPacket(TcpHeader header, Packet payload) {
         this.header = header;
@@ -67,6 +69,14 @@ public class TcpPacket implements TransportPacket {
     @Override
     public Iterator<Packet> iterator() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "TcpPacket{" +
+                "header=" + header +
+                ", payload=" + payload +
+                '}';
     }
 
     public static final class TcpHeader implements TransportHeader {
@@ -155,6 +165,29 @@ public class TcpPacket implements TransportPacket {
         @Override
         public byte[] getRawData() {
             return new byte[0];
+        }
+
+        @Override
+        public String toString() {
+            return "TcpHeader{" +
+                    "srcPort=" + srcPort +
+                    ", dstPort=" + dstPort +
+                    ", sequenceNumber=" + sequenceNumber +
+                    ", acknowledgmentNumber=" + acknowledgmentNumber +
+                    ", dataOffset=" + dataOffset +
+                    ", reserved=" + reserved +
+                    ", urg=" + urg +
+                    ", ack=" + ack +
+                    ", psh=" + psh +
+                    ", rst=" + rst +
+                    ", syn=" + syn +
+                    ", fin=" + fin +
+                    ", window=" + window +
+                    ", checksum=" + checksum +
+                    ", urgentPointer=" + urgentPointer +
+                    ", options=" + options +
+                    ", padding=" + Arrays.toString(padding) +
+                    '}';
         }
 
         public interface TcpOption extends Serializable {
