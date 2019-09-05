@@ -41,11 +41,19 @@ class TcpPacketTest extends TcpPacketHelper {
         assertThat(rawData).isEqualTo(result);
     }
 
-    // TODO: TCP 3 way handshake로 연결한다.
+    @Test
+    @DisplayName("TCP 3 way handshake로 연결한다.")
+    void connection() {
 
-    // TODO: Port Open을 확인한다.
+    }
 
-    // TODO: 웹 요청 패킷을 pcap 파일로 저장한다.
+    @Test
+    @DisplayName("웹 요청 패킷을 pcap 파일로 저장한다.")
+    void save() {
+
+    }
+
+    // TODO: Port Open을 확인한다
 
     // TODO: DNS Packet을 전송한다.
 
@@ -55,8 +63,13 @@ class TcpPacketTest extends TcpPacketHelper {
 
     // TODO: traceroute를 구현한다.
 
-    // TODO: ARP를 이용하여 공유기 주소를 알아온다.
 
+
+
+
+    // TODO: SYN Flooding
+    // TODO: TCP Slicing
+    // TODO: TCP to HTTP
 
     @AfterEach
     void tearDown() throws NotOpenException {

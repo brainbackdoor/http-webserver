@@ -29,9 +29,8 @@ public final class TcpPort extends Port {
     public static TcpPort getInstance(Short value) {
         if (registry.containsKey(value)) {
             return registry.get(value);
-        } else {
-            return new TcpPort(value, "unknown");
         }
+        return new TcpPort(value, "unknown");
     }
 
     public static TcpPort register(TcpPort port) {

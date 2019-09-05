@@ -32,23 +32,12 @@ public class TcpPacketHelper {
         return new TcpPacket(header, new SimplePacket());
     }
 
-
-    class TcpNoOperationOption implements TcpPacket.TcpHeader.TcpOption {
+    public static class TcpNoOperationOption implements TcpPacket.TcpHeader.TcpOption {
         private final TcpOptionKind kind = TcpOptionKind.NO_OPERATION;
-
-        @Override
-        public TcpOptionKind getKind() {
-            return kind;
-        }
 
         @Override
         public int length() {
             return 1;
-        }
-
-        @Override
-        public byte[] getRawData() {
-            return new byte[]{(byte) 1};
         }
 
         @Override

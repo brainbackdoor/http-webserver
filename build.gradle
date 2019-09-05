@@ -14,6 +14,7 @@ repositories {
 }
 
 dependencies {
+    implementation files("${rootDir}/lib/sigar.jar")
     implementation 'org.pcap4j:pcap4j-core:1.+'
     implementation 'org.pcap4j:pcap4j-packetfactory-static:1.+'
     implementation 'org.apache.commons:commons-lang3:3.0'

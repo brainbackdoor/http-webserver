@@ -1,6 +1,5 @@
 package web.protocol.tcp;
 
-import org.pcap4j.packet.namednumber.TcpOptionKind;
 import web.protocol.Packet;
 
 import java.io.Serializable;
@@ -192,12 +191,7 @@ public class TcpPacket implements TransportPacket {
         }
 
         public interface TcpOption extends Serializable {
-
-            TcpOptionKind getKind();
-
             int length();
-
-            byte[] getRawData();
         }
     }
 }
