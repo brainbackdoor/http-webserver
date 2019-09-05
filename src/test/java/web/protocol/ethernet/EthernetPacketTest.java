@@ -19,4 +19,6 @@ class EthernetPacketTest {
 
         assertThat(packet).isNotNull();
     }
+
+    //TODO: ARP를 사용하여 공유기의 Mac address를 조회한다.
 }
