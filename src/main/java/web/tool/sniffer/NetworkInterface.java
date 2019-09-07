@@ -7,14 +7,15 @@ import com.sun.jna.Structure;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.pcap4j.core.Inets;
 import web.protocol.ethernet.MacAddress;
+import web.tool.sniffer.NativeMappings.pcap_addr;
 import web.util.ByteUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static web.protocol.ethernet.MacAddress.SIZE_IN_BYTES;
 import static web.tool.sniffer.PacketHandler.TimestampPrecision.MICRO;
 
 @Getter
@@ -34,61 +35,66 @@ public class NetworkInterface {
     private NetworkInterface(NativeMappings.pcap_if pif, boolean local) {
         this.name = pif.getName();
         this.description = pif.getDescription();
-
-        for (NativeMappings.pcap_addr pcapAddr = pif.getAddresses(); pcapAddr != null; pcapAddr = pcapAddr.getNext()) {
-            if (pcapAddr.getAddr() == null
-                    && pcapAddr.getNetmask() == null
-                    && pcapAddr.getBroadaddr() == null
-                    && pcapAddr.getDstaddr() == null) {
-                continue;
-            }
-
-            short sa_family = getSaFamily(pcapAddr); // Never get here.
-
-
-            if (Platform.isLinux() && sa_family == Inets.AF_PACKET) {
-                NativeMappings.sockaddr_ll sll = new NativeMappings.sockaddr_ll(pcapAddr.getAddr().getPointer());
-                byte[] addr = sll.getSll_addr();
-                int addrLength = sll.getSll_halen() & 0xFF;
-                if (addrLength == 6) {
-                    macAddresses.add(ByteUtils.getMacAddress(addr, 0));
-                } else if (addr.length == 0) {
-                    continue;
-                } else {
-                    addrLength = addrLength <= addr.length ? addrLength : addr.length;
-                    macAddresses.add(
-                            MacAddress.getByAddress(ByteUtils.getSubArray(addr, 0, addrLength)));
-                }
-            } else if ((Platform.isMac() || Platform.isFreeBSD() || Platform.isOpenBSD())
-                    || Platform.iskFreeBSD() && sa_family == Inets.AF_LINK) {
-                NativeMappings.sockaddr_dl sdl = new NativeMappings.sockaddr_dl(pcapAddr.getAddr().getPointer());
-                byte[] addr = sdl.getAddress();
-                if (addr.length == 6) {
-                    macAddresses.add(MacAddress.getByAddress(addr));
-                } else if (addr.length == 0) {
-                    continue;
-                } else {
-                    macAddresses.add(MacAddress.getByAddress(addr));
-                }
-            }
-        }
-
         this.loopBack = (pif.getFlags() & LOOPBACK_CONDITION) != 0;
         this.up = (pif.getFlags() & UP_CONDITION) != 0;
         this.running = (pif.getFlags() & RUNNING_CONDITION) != 0;
         this.local = local;
+        addMacAddress(pif);
     }
 
-    private short getSaFamily(NativeMappings.pcap_addr pcapAddr) {
-        return pcapAddr.getAddr() != null
-                ? pcapAddr.getAddr().getSaFamily()
-                : pcapAddr.getNetmask() != null
-                ? pcapAddr.getNetmask().getSaFamily()
-                : pcapAddr.getBroadaddr() != null
-                ? pcapAddr.getBroadaddr().getSaFamily()
-                : pcapAddr.getDstaddr() != null
-                ? pcapAddr.getDstaddr().getSaFamily()
-                /* default */ : Inets.AF_UNSPEC;
+    private void addMacAddress(NativeMappings.pcap_if pif) {
+        for (pcap_addr pcapAddr = pif.getAddresses(); pcapAddr != null; pcapAddr = pcapAddr.getNext()) {
+            if (isBlankAddress(pcapAddr)) {
+                continue;
+            }
+
+            int addrLength = getAddrLength(pcapAddr);
+            if (isBlank(addrLength)) {
+                continue;
+            }
+
+            MacAddress macAddress = getMacAddress(getAddr(pcapAddr), addrLength);
+            macAddresses.add(macAddress);
+        }
+    }
+
+    private MacAddress getMacAddress(byte[] addr, int addrLength) {
+        return (Platform.isLinux())
+                ? getMacAddressByLinux(addr, addrLength)
+                : MacAddress.getByAddress(addr);
+    }
+
+    private boolean isBlank(int addrLength) {
+        return addrLength == 0;
+    }
+
+    private byte[] getAddr(NativeMappings.pcap_addr pcapAddr) {
+        return (Platform.isLinux())
+                ? new NativeMappings.sockaddr_ll(pcapAddr.getAddr().getPointer()).getSll_addr()
+                : new NativeMappings.sockaddr_dl(pcapAddr.getAddr().getPointer()).getAddress();
+    }
+
+    private int getAddrLength(NativeMappings.pcap_addr pcapAddr) {
+        return (Platform.isLinux())
+                ? new NativeMappings.sockaddr_ll(pcapAddr.getAddr().getPointer()).getSll_halen() & 0xFF
+                : new NativeMappings.sockaddr_dl(pcapAddr.getAddr().getPointer()).getAddress().length;
+    }
+
+    private boolean isBlankAddress(NativeMappings.pcap_addr pcapAddr) {
+        return pcapAddr.getAddr() == null
+                && pcapAddr.getNetmask() == null
+                && pcapAddr.getBroadaddr() == null
+                && pcapAddr.getDstaddr() == null;
+    }
+
+    private MacAddress getMacAddressByLinux(byte[] addr, int addrLength) {
+        return (addrLength == SIZE_IN_BYTES)
+                ? ByteUtils.getMacAddress(addr, 0)
+                : MacAddress.getByAddress(ByteUtils.getSubArray(addr, 0, getAddrLength(addr, addrLength)));
+    }
+
+    private int getAddrLength(byte[] addr, int addrLength) {
+        return addrLength <= addr.length ? addrLength : addr.length;
     }
 
     static NetworkInterface of(NativeMappings.pcap_if pif, boolean local) {

@@ -27,7 +27,7 @@ class IpPacketTest {
 //                (Inet4Address)
 //                        InetAddress.getByAddress(new byte[] {(byte) 192, (byte) 0, (byte) 2, (byte) 1}));
 //        IpPacket packet = new IpPacket(header, new SimplePacket());
-
+//
 //        assertThat(packet).isNotNull();
     }
 
