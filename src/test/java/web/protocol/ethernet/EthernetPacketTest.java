@@ -7,20 +7,18 @@ import org.junit.jupiter.api.Test;
 import web.protocol.Packet;
 import web.protocol.SimplePacket;
 import web.protocol.ethernet.EthernetPacket.EthernetHeader;
-import web.tool.dump.TcpDump;
-import web.tool.sniffer.NetworkInterface;
-import web.tool.sniffer.NetworkInterfaceService;
+import web.protocol.ip.IpPacket;
 import web.tool.sniffer.PacketHandler;
 import web.tool.sniffer.PacketNativeException;
-import web.util.ByteUtils;
+
+import java.net.UnknownHostException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static web.protocol.ethernet.EthernetPacket.EthernetHeader.*;
+import static web.protocol.ethernet.PacketTestHelper.*;
+import static web.protocol.ethernet.Type.ARP;
 
 class EthernetPacketTest {
-    private static final String PCAP_FILE_KEY = EthernetPacketTest.class.getName() + ".pcapFile";
-    private static final String PCAP_FILE = System.getProperty(PCAP_FILE_KEY, "Dump.pcap");
-    PacketHandler handler;
+    public PacketHandler handler;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -30,7 +28,7 @@ class EthernetPacketTest {
     @Test
     @DisplayName("Ethernet Packet을 생성한다.")
     void constructor() {
-        EthernetHeader header = createHeader();
+        EthernetHeader header = createEthernetHeader(ARP);
         EthernetPacket packet = new EthernetPacket(header, new SimplePacket());
 
         assertThat(packet).isNotNull();
@@ -38,8 +36,8 @@ class EthernetPacketTest {
 
     @Test
     @DisplayName("Ethernet Packet을 전송한다.")
-    void arp() throws Exception {
-        EthernetPacket expected = new EthernetPacket(createHeader(), new SimplePacket());
+    void send() throws Exception {
+        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), new SimplePacket());
         Packet actual = handler.sendPacket(expected);
 
         assertThat(actual).isEqualTo(expected);
@@ -47,12 +45,13 @@ class EthernetPacketTest {
 
     @Test
     @DisplayName("Packet을 pcap 파일에 저장한다.")
-    void save() throws PacketNativeException {
-        EthernetPacket expected = new EthernetPacket(createHeader(), new SimplePacket());
-        save(expected);
+    void save() throws PacketNativeException, UnknownHostException {
+        IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
+        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), ipPacket);
+        PacketTestHelper.save(handler, expected);
         Packet actual = createEthernetPacket(read());
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.getHeader()).isEqualTo(expected.getHeader());
     }
 
     @Test
@@ -63,40 +62,5 @@ class EthernetPacketTest {
     @AfterEach
     void tearDown() {
         handler.close();
-    }
-
-    private PacketHandler getHandler() throws Exception {
-        NetworkInterface nif = NetworkInterfaceService.findByName("en0");
-        return nif.openLive(65536, NetworkInterface.PromiscuousMode.PROMISCUOUS, 10);
-    }
-
-    private EthernetHeader createHeader() {
-        MacAddress src = MacAddress.getByName("00:00:00:00:00:01");
-        MacAddress dst = MacAddress.ETHER_BROADCAST_ADDRESS;
-        Type protocolType = Type.ARP;
-
-        return new EthernetHeader(dst, src, protocolType);
-    }
-
-    private Packet createEthernetPacket(byte[] rawData) {
-        MacAddress dstAddr = ByteUtils.getMacAddress(rawData, DST_ADDR_OFFSET);
-        MacAddress srcAddr = ByteUtils.getMacAddress(rawData, SRC_ADDR_OFFSET);
-        Type type = Type.getInstance(ByteUtils.getShort(rawData, TYPE_OFFSET));
-
-        EthernetHeader header = new EthernetHeader(dstAddr, srcAddr, type);
-        return new EthernetPacket(header, new SimplePacket());
-    }
-
-    private byte[] read() throws PacketNativeException {
-        PacketHandler handler = TcpDump.openOffline(PCAP_FILE);
-        byte[] rawData = handler.getNextRawPacket();
-        handler.close();
-        return rawData;
-    }
-
-    private void save(EthernetPacket packet) throws PacketNativeException {
-        TcpDump dumper = handler.dumpOpen(PCAP_FILE);
-        dumper.dump(packet);
-        dumper.close();
     }
 }

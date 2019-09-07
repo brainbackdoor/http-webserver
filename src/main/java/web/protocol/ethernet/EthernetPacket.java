@@ -9,6 +9,7 @@ import web.util.ByteUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static web.protocol.ethernet.MacAddress.SIZE_IN_BYTES;
 import static web.util.ByteUtils.SHORT_SIZE_IN_BYTES;
 import static web.util.PacketUtils.copyHeader;
 import static web.util.PacketUtils.copyPayload;
@@ -55,12 +56,12 @@ public class EthernetPacket implements Packet {
     public static final class EthernetHeader implements Header {
 
         static final int DST_ADDR_OFFSET = 0;
-        private static final int DST_ADDR_SIZE = MacAddress.SIZE_IN_BYTES;
+        private static final int DST_ADDR_SIZE = SIZE_IN_BYTES;
         static final int SRC_ADDR_OFFSET = DST_ADDR_OFFSET + DST_ADDR_SIZE;
-        private static final int SRC_ADDR_SIZE = MacAddress.SIZE_IN_BYTES;
+        private static final int SRC_ADDR_SIZE = SIZE_IN_BYTES;
         static final int TYPE_OFFSET = SRC_ADDR_OFFSET + SRC_ADDR_SIZE;
         private static final int TYPE_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int ETHERNET_HEADER_SIZE = TYPE_OFFSET + TYPE_SIZE; // 14
+        private static final int ETHERNET_HEADER_SIZE = TYPE_OFFSET + TYPE_SIZE; // 14 Bytes
 
         private final MacAddress dstAddr;
         private final MacAddress srcAddr;

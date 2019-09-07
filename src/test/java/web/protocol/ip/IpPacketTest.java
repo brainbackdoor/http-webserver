@@ -1,34 +1,52 @@
 package web.protocol.ip;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import web.protocol.Packet;
+import web.protocol.SimplePacket;
+import web.protocol.ethernet.EthernetPacket;
+import web.protocol.ethernet.PacketTestHelper;
+import web.protocol.ip.IpPacket.IpHeader;
+import web.tool.sniffer.PacketHandler;
+import web.tool.sniffer.PacketNativeException;
 
 import java.net.UnknownHostException;
 
-class IpPacketTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static web.protocol.ethernet.Type.IPV4;
+
+class IpPacketTest extends PacketTestHelper {
+
+    PacketHandler handler;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        handler = getHandler();
+    }
 
     @Test
     @DisplayName("IPv4 Packet을 생성한다.")
     void constructor() throws UnknownHostException {
-//        IpHeader header = new IpHeader(Version.IPV4,
-//                (byte) 9,
-//                null,
-//                (short) 44,
-//                (short) 123,
-//                true,
-//                false,
-//                true,
-//                (short) 0,
-//                (byte) 111,
-//                ProtocolIdentifier.TCP,
-//                (short) 0xEEEE,
-//                (Inet4Address)
-//                        InetAddress.getByAddress(new byte[] {(byte) 192, (byte) 0, (byte) 2, (byte) 1}),
-//                (Inet4Address)
-//                        InetAddress.getByAddress(new byte[] {(byte) 192, (byte) 0, (byte) 2, (byte) 1}));
-//        IpPacket packet = new IpPacket(header, new SimplePacket());
-//
-//        assertThat(packet).isNotNull();
+        IpHeader header = createIpHeader();
+        IpPacket packet = new IpPacket(header, new SimplePacket());
+
+        assertThat(packet).isNotNull();
     }
 
+    @Test
+    @DisplayName("IPv4 Packet을 전송한다.")
+    void send() throws UnknownHostException, PacketNativeException {
+        IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
+        EthernetPacket expected = new EthernetPacket(createEthernetHeader(IPV4), ipPacket);
+        Packet actual = handler.sendPacket(expected);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @AfterEach
+    void tearDown() {
+        handler.close();
+    }
 }

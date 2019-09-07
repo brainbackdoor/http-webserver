@@ -13,7 +13,6 @@ public interface Packet extends Serializable {
 
     byte[] getRawData();
 
-
     interface Header extends Serializable {
 
         int length();
