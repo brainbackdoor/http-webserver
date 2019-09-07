@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.math.NumberUtils.INTEGER_MINUS_ONE;
-import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
-
 public class NativeMappings {
     private static final ByteOrder NATIVE_BYTE_ORDER = ByteOrder.nativeOrder();
 
@@ -58,26 +55,12 @@ public class NativeMappings {
 
     static native Pointer pcap_dump_open(Pointer p, String fname);
 
-    static native Pointer pcap_next(Pointer p, pcap_pkthdr h);
-
     public static native void pcap_dump(Pointer user, pcap_pkthdr header, byte[] packet);
 
-    interface PacketLibrary extends Library {
+    public static native Pointer pcap_open_offline(String fname, NetworkInterface.Errbuf errbuf);
 
-        PacketLibrary INSTANCE =
-                Native.loadLibrary(PCAP_LIB_NAME, PacketLibrary.class, NATIVE_LOAD_LIBRARY_OPTIONS);
+    static native int pcap_next_ex(Pointer p, PointerByReference h, PointerByReference data);
 
-        int strioctl(int fd, int cmd, int len, Pointer dp);
-    }
-
-    static int getFdFromPcapT(Pointer p) {
-        return (Platform.isWindows()) ? INTEGER_MINUS_ONE : p.getInt(INTEGER_ZERO);
-    }
-
-
-    /**
-     *
-     */
     private static short getFamilyByPlatform(short data) {
         return (isWindowsType()) ? data : formatByteOrder(data);
     }

@@ -1,6 +1,7 @@
 package web.protocol.ethernet;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import web.protocol.Packet;
 import web.util.ByteUtils;
@@ -13,6 +14,7 @@ import static web.util.PacketUtils.copyHeader;
 import static web.util.PacketUtils.copyPayload;
 
 @ToString
+@EqualsAndHashCode
 public class EthernetPacket implements Packet {
 
     private final EthernetHeader header;
@@ -49,6 +51,7 @@ public class EthernetPacket implements Packet {
 
     @Builder
     @ToString
+    @EqualsAndHashCode
     public static final class EthernetHeader implements Header {
 
         static final int DST_ADDR_OFFSET = 0;

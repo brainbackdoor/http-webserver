@@ -1,6 +1,7 @@
 package web.protocol.ethernet;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import web.util.ByteUtils;
 
@@ -8,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 public class MacAddress {
 

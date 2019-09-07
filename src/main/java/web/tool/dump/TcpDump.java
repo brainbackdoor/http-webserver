@@ -5,6 +5,8 @@ import com.sun.jna.Pointer;
 import web.protocol.Packet;
 import web.tool.sniffer.NativeMappings;
 import web.tool.sniffer.NativeMappings.pcap_pkthdr;
+import web.tool.sniffer.NetworkInterface;
+import web.tool.sniffer.PacketHandler;
 import web.tool.sniffer.PacketHandler.TimestampPrecision;
 import web.tool.sniffer.PacketNativeException;
 
@@ -45,6 +47,17 @@ public class TcpDump implements Closeable {
         header.ts.tv_usec = getTvUsec(timestamp);
 
         NativeMappings.pcap_dump(pointer, header, packet);
+    }
+
+    public static PacketHandler openOffline(String filePath) throws PacketNativeException {
+        NetworkInterface.Errbuf errbuf = new NetworkInterface.Errbuf();
+        Pointer handle = NativeMappings.pcap_open_offline(filePath, errbuf);
+
+        if (handle == null || errbuf.length() != 0) {
+            throw new PacketNativeException(errbuf.toString());
+        }
+
+        return new PacketHandler(handle, MICRO);
     }
 
     private NativeLong getTvUsec(Timestamp timestamp) {

@@ -1,8 +1,10 @@
 package web.protocol;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @ToString
+@EqualsAndHashCode
 public class SimplePacket implements Packet {
 
     @Override

@@ -20,6 +20,6 @@ public enum Type {
     }
 
     public static Type getInstance(Short value){
-        return Arrays.stream(Type.values()).filter(v -> v.equals(value)).findFirst().get();
+        return Arrays.stream(Type.values()).filter(v -> v.value == value).findFirst().get();
     }
 }

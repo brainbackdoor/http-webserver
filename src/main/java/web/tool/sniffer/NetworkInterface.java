@@ -43,16 +43,7 @@ public class NetworkInterface {
                 continue;
             }
 
-            short sa_family =
-                    pcapAddr.getAddr() != null
-                            ? pcapAddr.getAddr().getSaFamily()
-                            : pcapAddr.getNetmask() != null
-                            ? pcapAddr.getNetmask().getSaFamily()
-                            : pcapAddr.getBroadaddr() != null
-                            ? pcapAddr.getBroadaddr().getSaFamily()
-                            : pcapAddr.getDstaddr() != null
-                            ? pcapAddr.getDstaddr().getSaFamily()
-                            /* default */ : Inets.AF_UNSPEC; // Never get here.
+            short sa_family = getSaFamily(pcapAddr); // Never get here.
 
 
             if (Platform.isLinux() && sa_family == Inets.AF_PACKET) {
@@ -86,6 +77,18 @@ public class NetworkInterface {
         this.up = (pif.getFlags() & UP_CONDITION) != 0;
         this.running = (pif.getFlags() & RUNNING_CONDITION) != 0;
         this.local = local;
+    }
+
+    private short getSaFamily(NativeMappings.pcap_addr pcapAddr) {
+        return pcapAddr.getAddr() != null
+                ? pcapAddr.getAddr().getSaFamily()
+                : pcapAddr.getNetmask() != null
+                ? pcapAddr.getNetmask().getSaFamily()
+                : pcapAddr.getBroadaddr() != null
+                ? pcapAddr.getBroadaddr().getSaFamily()
+                : pcapAddr.getDstaddr() != null
+                ? pcapAddr.getDstaddr().getSaFamily()
+                /* default */ : Inets.AF_UNSPEC;
     }
 
     static NetworkInterface of(NativeMappings.pcap_if pif, boolean local) {
