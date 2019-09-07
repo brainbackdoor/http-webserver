@@ -1,9 +1,9 @@
-//package web.protocol.tcp;
+//package web.protocolIdentifier.tcp;
 //
 //import org.pcap4j.core.*;
 //import org.pcap4j.util.MacAddress;
 //import org.pcap4j.util.NifSelector;
-//import web.protocol.Packet;
+//import web.protocolIdentifier.Packet;
 //
 //import java.io.IOException;
 //import java.net.Inet4Address;
@@ -81,9 +81,9 @@
 //                echoData[i] = (byte) i;
 //            }
 //
-//            List<web.protocol.tcp.TcpPacket.TcpHeader.TcpOption> options = new ArrayList<>();
+//            List<web.protocolIdentifier.tcp.TcpPacket.TcpHeader.TcpOption> options = new ArrayList<>();
 //            options.add(new TcpPacketHelper.TcpNoOperationOption());
-//            byte dataOffset = 15;
+//            byte offset = 15;
 //            byte reserved = (byte) 11;
 //
 ////            UnknownPacket.Builder unknownb = new UnknownPacket.Builder();
@@ -94,7 +94,7 @@
 //                    .srcPort(TcpPort.getInstance((short) 0))
 //                    .sequenceNumber(1234567)
 //                    .acknowledgmentNumber(7654321)
-//                    .dataOffset(dataOffset)
+//                    .offset(offset)
 //                    .reserved(reserved)
 //                    .urg(false)
 //                    .ack(false)
@@ -113,12 +113,12 @@
 ////                    .payloadBuilder(unknownb);
 //
 //
-//            IpV4Packet.Builder ipV4Builder = new IpV4Packet.Builder();
+//            IpPacket.Builder ipV4Builder = new IpPacket.Builder();
 //            try {
 //                ipV4Builder
-//                        .version(IpVersion.IPV4)
+//                        .version(Version.IPV4)
 //                        .ttl((byte) 100)
-//                        .protocol(IpNumber.TCP)
+//                        .protocolIdentifier(ProtocolIdentifier.TCP)
 //                        .srcAddr((Inet4Address) InetAddress.getByName(strSrcIpAddress))
 //                        .dstAddr((Inet4Address) InetAddress.getByName(strDstIpAddress))
 //                        .payloadBuilder(b)
@@ -132,7 +132,7 @@
 //            etherBuilder
 //                    .dstAddr(MacAddress.getByName(strDstMacAddress, ":"))
 //                    .srcAddr(srcMacAddr)
-//                    .type(EtherType.IPV4)
+//                    .type(Type.IPV4)
 //                    .paddingAtBuild(true);
 //
 //            for (int i = 0; i < COUNT; i++) {

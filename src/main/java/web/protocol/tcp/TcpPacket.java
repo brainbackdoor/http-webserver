@@ -1,22 +1,22 @@
 package web.protocol.tcp;
 
+import lombok.Builder;
+import lombok.Getter;
 import web.protocol.Packet;
+import web.util.ByteUtils;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.pcap4j.util.ByteArrays.INT_SIZE_IN_BYTES;
-import static org.pcap4j.util.ByteArrays.SHORT_SIZE_IN_BYTES;
+import static web.util.PacketUtils.copyHeader;
+import static web.util.PacketUtils.copyPayload;
 
+@Builder
+@Getter
 public class TcpPacket implements TransportPacket {
-
-    private static final long serialVersionUID = 7904566782140471299L;
 
     private final TcpHeader header;
     private final Packet payload;
-
 
     public TcpPacket(TcpHeader header, Packet payload) {
         this.header = header;
@@ -25,173 +25,78 @@ public class TcpPacket implements TransportPacket {
 
     @Override
     public TransportHeader getHeader() {
-        return null;
+        return header;
     }
 
     @Override
     public Packet getPayload() {
-        return null;
+        return payload;
     }
 
     @Override
     public int length() {
-        return 0;
+        return getHeader().length() + getPayload().length();
     }
 
     @Override
     public byte[] getRawData() {
-        byte[] rawData = payload.getRawData();
-        byte[] copy = new byte[rawData.length];
-        System.arraycopy(rawData, 0, copy, 0, copy.length);
-        return copy;
+        byte[] result = new byte[length()];
+
+        int nextPosition = copyHeader(this, result, 0);
+        copyPayload(this, result, nextPosition);
+        return result;
     }
 
-    @Override
-    public <T extends Packet> T get(Class<T> clazz) {
-        return null;
-    }
-
-    @Override
-    public Packet getOuterOf(Class<? extends Packet> clazz) {
-        return null;
-    }
-
-    @Override
-    public <T extends Packet> boolean contains(Class<T> clazz) {
-        return false;
-    }
-
-    @Override
-    public Builder getBuilder() {
-        return null;
-    }
-
-    @Override
-    public Iterator<Packet> iterator() {
-        return null;
-    }
-
-    @Override
-    public String toString() {
-        return "TcpPacket{" +
-                "header=" + header +
-                ", payload=" + payload +
-                '}';
-    }
-
+    @Builder
+    @Getter
     public static final class TcpHeader implements TransportHeader {
-        private static final long serialVersionUID = -795185420055823677L;
 
-        private static final int SRC_PORT_OFFSET = 0;
-        private static final int SRC_PORT_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int DST_PORT_OFFSET = SRC_PORT_OFFSET + SRC_PORT_SIZE;
-        private static final int DST_PORT_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int SEQUENCE_NUMBER_OFFSET = DST_PORT_OFFSET + DST_PORT_SIZE;
-        private static final int SEQUENCE_NUMBER_SIZE = INT_SIZE_IN_BYTES;
-        private static final int ACKNOWLEDGMENT_NUMBER_OFFSET =
-                SEQUENCE_NUMBER_OFFSET + SEQUENCE_NUMBER_SIZE;
-        private static final int ACKNOWLEDGMENT_NUMBER_SIZE = INT_SIZE_IN_BYTES;
-        private static final int DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET =
-                ACKNOWLEDGMENT_NUMBER_OFFSET + ACKNOWLEDGMENT_NUMBER_SIZE;
-        private static final int DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int WINDOW_OFFSET =
-                DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET
-                        + DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_SIZE;
-        private static final int WINDOW_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int CHECKSUM_OFFSET = WINDOW_OFFSET + WINDOW_SIZE;
-        private static final int CHECKSUM_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int URGENT_POINTER_OFFSET = CHECKSUM_OFFSET + CHECKSUM_SIZE;
-        private static final int URGENT_POINTER_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int OPTIONS_OFFSET = URGENT_POINTER_OFFSET + URGENT_POINTER_SIZE;
-
-        private static final int MIN_TCP_HEADER_SIZE = URGENT_POINTER_OFFSET + URGENT_POINTER_SIZE;
-
-        private static final int IPV4_PSEUDO_HEADER_SIZE = 12;
-        private static final int IPV6_PSEUDO_HEADER_SIZE = 40;
+        private static final int DEFAULT_TCP_HEADER_SIZE = 20;
 
         private final TcpPort srcPort;
         private final TcpPort dstPort;
         private final int sequenceNumber;
         private final int acknowledgmentNumber;
-        private final byte dataOffset;
+        private final byte offset;
         private final byte reserved;
-        private final boolean urg;
-        private final boolean ack;
-        private final boolean psh;
-        private final boolean rst;
-        private final boolean syn;
-        private final boolean fin;
+        private final Flag flag;
         private final short window;
         private final short checksum;
         private final short urgentPointer;
-        private final List<TcpOption> options;
-        private final byte[] padding;
 
-        public TcpHeader(TcpPort srcPort, TcpPort dstPort, int sequenceNumber, int acknowledgmentNumber, byte dataOffset, byte reserved, boolean urg, boolean ack, boolean psh, boolean rst, boolean syn, boolean fin, short window, short checksum, short urgentPointer, List<TcpOption> options, byte[] padding) {
-            this.srcPort = srcPort;
-            this.dstPort = dstPort;
-            this.sequenceNumber = sequenceNumber;
-            this.acknowledgmentNumber = acknowledgmentNumber;
-            this.dataOffset = dataOffset;
-            this.reserved = reserved;
-            this.urg = urg;
-            this.ack = ack;
-            this.psh = psh;
-            this.rst = rst;
-            this.syn = syn;
-            this.fin = fin;
-            this.window = window;
-            this.checksum = checksum;
-            this.urgentPointer = urgentPointer;
-            this.options = options;
-            this.padding = padding;
+
+        @Override
+        public TcpPort getSrcPort() {
+            return srcPort;
         }
 
         @Override
-        public Port getSrcPort() {
-            return null;
-        }
-
-        @Override
-        public Port getDstPort() {
-            return null;
+        public TcpPort getDstPort() {
+            return dstPort;
         }
 
         @Override
         public int length() {
-            return 0;
+            return DEFAULT_TCP_HEADER_SIZE;
         }
 
         @Override
-        public byte[] getRawData() {
-            return new byte[0];
+        public List<byte[]> getRawFields() {
+            return getRawFields(false);
         }
 
-        @Override
-        public String toString() {
-            return "TcpHeader{" +
-                    "srcPort=" + srcPort +
-                    ", dstPort=" + dstPort +
-                    ", sequenceNumber=" + sequenceNumber +
-                    ", acknowledgmentNumber=" + acknowledgmentNumber +
-                    ", dataOffset=" + dataOffset +
-                    ", reserved=" + reserved +
-                    ", urg=" + urg +
-                    ", ack=" + ack +
-                    ", psh=" + psh +
-                    ", rst=" + rst +
-                    ", syn=" + syn +
-                    ", fin=" + fin +
-                    ", window=" + window +
-                    ", checksum=" + checksum +
-                    ", urgentPointer=" + urgentPointer +
-                    ", options=" + options +
-                    ", padding=" + Arrays.toString(padding) +
-                    '}';
+        private List<byte[]> getRawFields(boolean zeroInsteadOfChecksum) {
+            List<byte[]> rawFields = new ArrayList<>();
+            rawFields.add(ByteUtils.toByteArray(srcPort.getValue()));
+            rawFields.add(ByteUtils.toByteArray(dstPort.getValue()));
+            rawFields.add(ByteUtils.toByteArray(sequenceNumber));
+            rawFields.add(ByteUtils.toByteArray(acknowledgmentNumber));
+            rawFields.add(ByteUtils.toByteArray((short) ((offset << 12) | (reserved << 6) | flag.getValue())));
+            rawFields.add(ByteUtils.toByteArray(window));
+            rawFields.add(ByteUtils.toByteArray(zeroInsteadOfChecksum ? (short) 0 : checksum));
+            rawFields.add(ByteUtils.toByteArray(urgentPointer));
+            return rawFields;
         }
 
-        public interface TcpOption extends Serializable {
-            int length();
-        }
     }
 }

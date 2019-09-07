@@ -1,7 +1,5 @@
 package web.protocol;
 
-import java.util.Iterator;
-
 public class SimplePacket implements Packet {
 
     @Override
@@ -26,35 +24,5 @@ public class SimplePacket implements Packet {
         bytes[1] = 2;
         bytes[2] = 3;
         return bytes;
-    }
-
-    @Override
-    public <T extends Packet> T get(Class<T> clazz) {
-        return null;
-    }
-
-    @Override
-    public Packet getOuterOf(Class<? extends Packet> clazz) {
-        return null;
-    }
-
-    @Override
-    public <T extends Packet> boolean contains(Class<T> clazz) {
-        return false;
-    }
-
-    @Override
-    public Builder getBuilder() {
-        return null;
-    }
-
-    @Override
-    public Iterator<Packet> iterator() {
-        return null;
-    }
-
-    @Override
-    public String toString() {
-        return "SimplePacket{}";
     }
 }
