@@ -25,11 +25,11 @@ class PathTest {
     @Test
     @DisplayName("각 경로조각은 별도로 파라미터를 가질 수 있다.")
     void setParameterSeveral() {
-        String givenPath = "/hammers;type=d/index.html;graphics=true";
+        String givenPath = "/hammers;protocolType=d/index.html;graphics=true";
 
         Path path = Path.of(givenPath);
 
-        assertThat(path.get(1).getParameter(0).getKey()).isEqualTo("type");
+        assertThat(path.get(1).getParameter(0).getKey()).isEqualTo("protocolType");
         assertThat(path.get(1).getParameter(0).getValue()).isEqualTo("d");
 
         assertThat(path.get(2).getParameter(0).getKey()).isEqualTo("graphics");

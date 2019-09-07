@@ -1,5 +1,8 @@
 package web.protocol;
 
+import lombok.ToString;
+
+@ToString
 public class SimplePacket implements Packet {
 
     @Override

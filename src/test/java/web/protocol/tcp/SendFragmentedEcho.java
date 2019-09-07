@@ -132,7 +132,7 @@
 //            etherBuilder
 //                    .dstAddr(MacAddress.getByName(strDstMacAddress, ":"))
 //                    .srcAddr(srcMacAddr)
-//                    .type(Type.IPV4)
+//                    .protocolType(Type.IPV4)
 //                    .paddingAtBuild(true);
 //
 //            for (int i = 0; i < COUNT; i++) {

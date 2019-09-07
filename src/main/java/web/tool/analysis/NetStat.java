@@ -1,4 +1,4 @@
-package web.util;
+package web.tool.analysis;
 
 import org.hyperic.sigar.NetConnection;
 import org.hyperic.sigar.NetFlags;

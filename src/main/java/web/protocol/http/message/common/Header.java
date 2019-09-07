@@ -117,7 +117,7 @@ public class Header {
     @Override
     public String toString() {
         return "Header{" +
-                "type=" + type +
+                "protocolType=" + type +
                 ", value='" + value + '\'' +
                 '}';
     }

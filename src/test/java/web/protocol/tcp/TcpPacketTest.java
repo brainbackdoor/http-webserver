@@ -78,7 +78,7 @@
 //    }
 //
 //    private PcapHandle getHandle() throws PcapNativeException {
-//        PcapNetworkInterface nif = Pcaps.getDevByName("en0");
+//        PcapNetworkInterface nif = Pcaps.findByName("en0");
 //        return nif.openLive(65536, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, 10);
 //    }
 //
