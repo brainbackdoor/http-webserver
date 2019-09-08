@@ -1,10 +1,13 @@
 package web.protocol.ethernet;
 
+import lombok.ToString;
 import web.protocol.Packet;
 import web.protocol.SimplePacket;
 import web.protocol.ip.Flag;
 import web.protocol.ip.IpPacket;
 import web.protocol.ip.IpPacket.IpHeader;
+import web.protocol.tcp.TcpPacket;
+import web.protocol.tcp.TcpPort;
 import web.tool.dump.TcpDump;
 import web.tool.sniffer.NetworkInterface;
 import web.tool.sniffer.NetworkInterfaceService;
@@ -17,9 +20,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import static web.protocol.ethernet.EthernetPacket.EthernetHeader;
-import static web.protocol.ethernet.EthernetPacket.EthernetHeader.DST_ADDR_OFFSET;
-import static web.protocol.ethernet.EthernetPacket.EthernetHeader.SRC_ADDR_OFFSET;
-import static web.protocol.ethernet.EthernetPacket.EthernetHeader.TYPE_OFFSET;
+import static web.protocol.ethernet.EthernetPacket.EthernetHeader.*;
 import static web.protocol.ip.ProtocolIdentifier.TCP;
 import static web.protocol.ip.Version.IPV4;
 
@@ -30,7 +31,6 @@ public class PacketTestHelper {
     public static EthernetHeader createEthernetHeader(Type protocolType) {
         MacAddress src = MacAddress.getByName("00:00:00:00:00:01");
         MacAddress dst = MacAddress.ETHER_BROADCAST_ADDRESS;
-
         return new EthernetHeader(dst, src, protocolType);
     }
 
@@ -44,15 +44,28 @@ public class PacketTestHelper {
     }
 
     public static IpHeader createIpHeader() throws UnknownHostException {
-        Inet4Address src = (Inet4Address) InetAddress.getByAddress(new byte[]{(byte) 192, (byte) 0, (byte) 2, (byte) 1});
-        Inet4Address dst = (Inet4Address) InetAddress.getByAddress(new byte[]{(byte) 168, (byte) 126, (byte) 63, (byte) 1});
+        Inet4Address src = (Inet4Address) InetAddress.getByName("192.168.6.171");
+        Inet4Address dst = (Inet4Address) InetAddress.getByName("192.168.6.172");
         return IpHeader.builder()
                 .version(IPV4)
+                .ihl((byte) 5)
+                .identification((short) 2)
                 .tos(IpV4TosTest.of())
                 .protocolIdentifier(TCP)
+                .ttl((byte) 100)
                 .flag(Flag.DONT_FRAGMENT)
                 .srcAddr(src)
                 .dstAddr(dst)
+                .build();
+    }
+
+    public static TcpPacket.TcpHeader createTcpHeader() {
+        return TcpPacket.TcpHeader.builder()
+                .dstPort(TcpPort.HTTP)
+                .srcPort(TcpPort.NONE)
+                .sequenceNumber(1234567)
+                .acknowledgmentNumber(7654321)
+                .flag(web.protocol.tcp.Flag.SYN)
                 .build();
     }
 
@@ -74,6 +87,7 @@ public class PacketTestHelper {
         dumper.close();
     }
 
+    @ToString
     public static class IpV4TosTest implements IpPacket.Tos {
 
         public static IpPacket.Tos of() {
@@ -82,8 +96,7 @@ public class PacketTestHelper {
 
         @Override
         public byte value() {
-            return 0x01;
+            return 0x75;
         }
     }
-
 }

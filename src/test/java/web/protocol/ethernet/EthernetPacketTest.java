@@ -18,7 +18,7 @@ import static web.protocol.ethernet.PacketTestHelper.*;
 import static web.protocol.ethernet.Type.ARP;
 
 class EthernetPacketTest {
-    public PacketHandler handler;
+    PacketHandler handler;
 
     @BeforeEach
     void setUp() throws Exception {

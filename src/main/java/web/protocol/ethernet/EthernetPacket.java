@@ -46,7 +46,7 @@ public class EthernetPacket implements Packet {
         byte[] result = new byte[length()];
 
         int nextPosition = copyHeader(this, result, 0);
-        copyPayload(this, result, nextPosition);
+        copyPayload(this, result, nextPosition - 1);
         return result;
     }
 

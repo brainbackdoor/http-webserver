@@ -2,6 +2,7 @@ package web.protocol.ip;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.pcap4j.packet.namednumber.IpV4OptionType;
 import web.protocol.Packet;
 import web.util.ByteUtils;
@@ -17,6 +18,7 @@ import static web.util.PacketUtils.copyPayload;
 
 @Builder
 @Getter
+@ToString
 public class IpPacket implements Packet {
 
     private final IpHeader header;
@@ -53,6 +55,7 @@ public class IpPacket implements Packet {
 
     @Builder
     @Getter
+    @ToString
     public static final class IpHeader implements Header {
 
         private static final int VERSION_AND_IHL_OFFSET = 0;
@@ -77,7 +80,7 @@ public class IpPacket implements Packet {
         private static final int DST_ADDR_SIZE = INET4_ADDRESS_SIZE_IN_BYTES;
         private static final int OPTIONS_OFFSET = DST_ADDR_OFFSET + DST_ADDR_SIZE;
 
-        private static final int MIN_IPV4_HEADER_SIZE = DST_ADDR_OFFSET + DST_ADDR_SIZE; // 20 Bytes
+        public static final int MIN_IPV4_HEADER_SIZE = DST_ADDR_OFFSET + DST_ADDR_SIZE; // 20 Bytes
 
         private final Version version;
         private final byte ihl;
@@ -96,7 +99,7 @@ public class IpPacket implements Packet {
 
         @Override
         public int length() {
-            return MIN_IPV4_HEADER_SIZE;
+            return MIN_IPV4_HEADER_SIZE + 1;
         }
 
         @Override
@@ -108,14 +111,14 @@ public class IpPacket implements Packet {
             List<byte[]> rawFields = new ArrayList<>();
             rawFields.add(ByteUtils.toByteArray((byte) ((version.getValue() << 4) | ihl)));
             rawFields.add(new byte[]{tos.value()});
-            rawFields.add(ByteUtils.toByteArray(length()));
+            rawFields.add(ByteUtils.toByteArray((short) length()));
             rawFields.add(ByteUtils.toByteArray(identification));
-            rawFields.add(ByteUtils.toByteArray((short) ((flag.getValue() << 13) | fragmentOffset)));
-            rawFields.add(ByteUtils.toByteArray(ttl));
-            rawFields.add(ByteUtils.toByteArray(protocolIdentifier.getValue()));
+            rawFields.add(ByteUtils.toByteArray(flag.getValue()));
+            rawFields.add(new byte[]{ttl});
+            rawFields.add(new byte[]{protocolIdentifier.getValue()});
             rawFields.add(ByteUtils.toByteArray(zeroInsteadOfChecksum ? (short) 0 : headerChecksum));
-            rawFields.add(ByteUtils.toByteArray(srcAddr));
             rawFields.add(ByteUtils.toByteArray(dstAddr));
+            rawFields.add(ByteUtils.toByteArray(srcAddr));
             return rawFields;
         }
     }
