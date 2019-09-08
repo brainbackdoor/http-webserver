@@ -44,7 +44,7 @@ die () {
     exit 1
 }
 
-# OS specific web.http.support (must be 'true' or 'false').
+# OS specific web.protocol.http.support (must be 'true' or 'false').
 cygwin=false
 msys=false
 darwin=false
