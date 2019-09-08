@@ -8,6 +8,7 @@ import web.protocol.ip.IpPacket;
 import web.protocol.ip.IpPacket.IpHeader;
 import web.protocol.tcp.TcpPacket;
 import web.protocol.tcp.TcpPort;
+import web.protocol.tcp.option.*;
 import web.tool.dump.TcpDump;
 import web.tool.sniffer.NetworkInterface;
 import web.tool.sniffer.NetworkInterfaceService;
@@ -18,6 +19,8 @@ import web.util.ByteUtils;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static web.protocol.ethernet.EthernetPacket.EthernetHeader;
 import static web.protocol.ethernet.EthernetPacket.EthernetHeader.*;
@@ -49,6 +52,7 @@ public class PacketTestHelper {
         return IpHeader.builder()
                 .version(IPV4)
                 .ihl((byte) 5)
+                .totalLength((short) 40)
                 .identification((short) 2)
                 .tos(IpV4TosTest.of())
                 .protocolIdentifier(TCP)
@@ -60,12 +64,23 @@ public class PacketTestHelper {
     }
 
     public static TcpPacket.TcpHeader createTcpHeader() {
+        List<TcpPacket.TcpOption> options = new ArrayList<>();
+        options.add(TcpMaximumSegmentSizeOption.builder().maxSegSize((short) 5555).build());
+        options.add(TcpNoOperationOption.getInstance());
+        options.add(TcpWindowScaleOption.builder().shiftCount((byte) 2).build());
+        options.add(TcpSackPermittedOption.getInstance());
+        options.add(TcpTimestampsOption.builder().tsValue(200).tsEchoReply(111).build());
+
         return TcpPacket.TcpHeader.builder()
                 .dstPort(TcpPort.HTTP)
                 .srcPort(TcpPort.NONE)
                 .sequenceNumber(1234567)
                 .acknowledgmentNumber(7654321)
+                .window((short) 9999)
+                .offset((byte) 15)
                 .flag(web.protocol.tcp.Flag.SYN)
+                .urgentPointer((short) 1111)
+                .options(options)
                 .build();
     }
 

@@ -3,7 +3,9 @@ package web.util;
 import org.apache.commons.lang3.StringUtils;
 import web.protocol.ethernet.MacAddress;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -47,6 +49,27 @@ public class ByteUtils {
         return result;
     }
 
+    public static byte getByte(byte[] array, int offset) {
+        validateBounds(array, offset, BYTE_SIZE_IN_BYTES);
+        return array[offset];
+    }
+
+    public static Inet4Address getInet4Address(byte[] array, int offset) {
+        return getInet4Address(array, offset, ByteOrder.BIG_ENDIAN);
+    }
+
+    public static Inet4Address getInet4Address(byte[] array, int offset, ByteOrder byteOrder) {
+        validateBounds(array, offset, INET4_ADDRESS_SIZE_IN_BYTES);
+
+        try {
+            return (byteOrder.equals(LITTLE_ENDIAN))
+                    ? (Inet4Address) InetAddress.getByAddress(reverse(getSubArray(array, offset, INET4_ADDRESS_SIZE_IN_BYTES)))
+                    : (Inet4Address) InetAddress.getByAddress(getSubArray(array, offset, INET4_ADDRESS_SIZE_IN_BYTES));
+        } catch (UnknownHostException e) {
+            throw new AssertionError(e);
+        }
+    }
+
     public static byte[] toByteArray(int value) {
         return toByteArray(value, ByteOrder.BIG_ENDIAN);
     }
@@ -69,15 +92,18 @@ public class ByteUtils {
         return arrs.stream().map(c -> c.length).collect(summingInt(Integer::intValue));
     }
 
+    public static byte[] toByteArray(byte value) {
+        return new byte[]{value};
+    }
+
     public static byte[] toByteArray(short value) {
         return toByteArray(value, ByteOrder.BIG_ENDIAN);
     }
 
     public static byte[] toByteArray(short value, ByteOrder byteOrder) {
-        if (byteOrder.equals(LITTLE_ENDIAN)) {
-            return new byte[]{(byte) (value), (byte) (value >> BYTE_SIZE_IN_BITS * 1)};
-        }
-        return new byte[]{(byte) (value >> BYTE_SIZE_IN_BITS * 1), (byte) (value)};
+        return (byteOrder.equals(LITTLE_ENDIAN))
+                ? new byte[]{(byte) (value), (byte) (value >> BYTE_SIZE_IN_BITS * 1)}
+                : new byte[]{(byte) (value >> BYTE_SIZE_IN_BITS * 1), (byte) (value)};
     }
 
     public static byte[] toByteArray(MacAddress value) {
@@ -85,11 +111,7 @@ public class ByteUtils {
     }
 
     public static byte[] toByteArray(MacAddress value, ByteOrder byteOrder) {
-        if (byteOrder.equals(LITTLE_ENDIAN)) {
-            return reverse(value.getAddress());
-        }
-
-        return value.getAddress();
+        return (byteOrder.equals(LITTLE_ENDIAN)) ? reverse(value.getAddress()) : value.getAddress();
     }
 
     public static byte[] toByteArray(InetAddress value) {
@@ -97,11 +119,7 @@ public class ByteUtils {
     }
 
     public static byte[] toByteArray(InetAddress value, ByteOrder byteOrder) {
-        if (byteOrder.equals(LITTLE_ENDIAN)) {
-            return reverse(value.getAddress());
-        }
-
-        return value.getAddress();
+        return (byteOrder.equals(LITTLE_ENDIAN)) ? reverse(value.getAddress()) : value.getAddress();
     }
 
     public static byte[] reverse(byte[] array) {
