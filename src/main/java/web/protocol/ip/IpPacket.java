@@ -95,11 +95,15 @@ public class IpPacket implements Packet {
         private final Inet4Address srcAddr;
         private final Inet4Address dstAddr;
         private final List<IpOption> options;
-        private final byte[] padding;
+        private final byte[] padding = new byte[]{0};
 
         @Override
         public int length() {
-            return MIN_IPV4_HEADER_SIZE + 1;
+            return MIN_IPV4_HEADER_SIZE;
+        }
+
+        private short calLength() {
+            return (totalLength != 0) ? totalLength : MIN_IPV4_HEADER_SIZE;
         }
 
         @Override
@@ -111,14 +115,15 @@ public class IpPacket implements Packet {
             List<byte[]> rawFields = new ArrayList<>();
             rawFields.add(ByteUtils.toByteArray((byte) ((version.getValue() << 4) | ihl)));
             rawFields.add(new byte[]{tos.value()});
-            rawFields.add(ByteUtils.toByteArray((short) length()));
+            rawFields.add(ByteUtils.toByteArray(calLength()));
             rawFields.add(ByteUtils.toByteArray(identification));
-            rawFields.add(ByteUtils.toByteArray(flag.getValue()));
-            rawFields.add(new byte[]{ttl});
-            rawFields.add(new byte[]{protocolIdentifier.getValue()});
+            rawFields.add(ByteUtils.toByteArray((short) ((flag.getValue() << 13) | fragmentOffset)));
+            rawFields.add(ByteUtils.toByteArray(ttl));
+            rawFields.add(ByteUtils.toByteArray(protocolIdentifier.getValue()));
             rawFields.add(ByteUtils.toByteArray(zeroInsteadOfChecksum ? (short) 0 : headerChecksum));
             rawFields.add(ByteUtils.toByteArray(dstAddr));
             rawFields.add(ByteUtils.toByteArray(srcAddr));
+            rawFields.add(padding);
             return rawFields;
         }
     }

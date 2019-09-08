@@ -35,7 +35,8 @@ public class MacAddress {
 
     public static MacAddress getByAddress(byte[] address) {
         if (address.length != SIZE_IN_BYTES) {
-            throw new IllegalArgumentException("MacAddress Size가 맞지 않습니다.");
+            return null;
+//            throw new IllegalArgumentException("MacAddress Size가 맞지 않습니다.");
         }
         return new MacAddress(ByteUtils.clone(address));
     }

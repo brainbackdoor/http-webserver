@@ -1,10 +1,13 @@
 package web.protocol.tcp;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import web.protocol.Packet;
 import web.util.ByteUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,7 @@ import static web.util.PacketUtils.copyPayload;
 
 @Builder
 @Getter
+@ToString
 public class TcpPacket implements TransportPacket {
 
     private final TcpHeader header;
@@ -49,6 +53,7 @@ public class TcpPacket implements TransportPacket {
 
     @Builder
     @Getter
+    @ToString
     public static final class TcpHeader implements TransportHeader {
 
         private static final int DEFAULT_TCP_HEADER_SIZE = 20;
@@ -63,6 +68,7 @@ public class TcpPacket implements TransportPacket {
         private final short window;
         private final short checksum;
         private final short urgentPointer;
+        private final List<TcpOption> options;
 
 
         @Override
@@ -95,8 +101,32 @@ public class TcpPacket implements TransportPacket {
             rawFields.add(ByteUtils.toByteArray(window));
             rawFields.add(ByteUtils.toByteArray(zeroInsteadOfChecksum ? (short) 0 : checksum));
             rawFields.add(ByteUtils.toByteArray(urgentPointer));
+            for (TcpOption o : options) {
+                rawFields.add(o.getRawData());
+            }
             return rawFields;
         }
 
+    }
+
+    public interface TcpOption extends Serializable {
+        TcpOptionKind getKind();
+
+        int length();
+
+        byte[] getRawData();
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum TcpOptionKind {
+        NO_OPERATION((byte) 1, "No Operation"),
+        MAXIMUM_SEGMENT_SIZE((byte) 2, "Maximum Segment Size"),
+        WINDOW_SCALE((byte) 3, "Window Scale"),
+        SACK_PERMITTED((byte) 4, "SACK Permitted"),
+        TIMESTAMPS((byte) 8, "Timestamps");
+
+        private byte value;
+        private String name;
     }
 }
