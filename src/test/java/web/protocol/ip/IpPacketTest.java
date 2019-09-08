@@ -46,7 +46,7 @@ class IpPacketTest extends PacketTestHelper {
     }
 
     @Test
-    @DisplayName("Packet을 pcap 파일에 저장한다.")
+    @DisplayName("IP Packet을 pcap 파일에 저장한다.")
     void save() throws PacketNativeException, UnknownHostException {
         IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
         EthernetPacket expected = new EthernetPacket(createEthernetHeader(IPV4), ipPacket);
