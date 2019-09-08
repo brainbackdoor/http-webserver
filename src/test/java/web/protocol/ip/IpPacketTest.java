@@ -9,7 +9,6 @@ import web.protocol.SimplePacket;
 import web.protocol.ethernet.EthernetPacket;
 import web.protocol.ethernet.PacketTestHelper;
 import web.protocol.ip.IpPacket.IpHeader;
-import web.protocol.tcp.TcpPacket;
 import web.tool.sniffer.PacketHandler;
 import web.tool.sniffer.PacketNativeException;
 
@@ -39,8 +38,7 @@ class IpPacketTest extends PacketTestHelper {
     @Test
     @DisplayName("IPv4 Packet을 전송한다.")
     void send() throws UnknownHostException, PacketNativeException {
-        TcpPacket tcpPacket = new TcpPacket(createTcpHeader(), new SimplePacket());
-        IpPacket ipPacket = new IpPacket(createIpHeader(), tcpPacket);
+        IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
         EthernetPacket expected = new EthernetPacket(createEthernetHeader(IPV4), ipPacket);
         Packet actual = handler.sendPacket(expected);
 
@@ -50,11 +48,9 @@ class IpPacketTest extends PacketTestHelper {
     @Test
     @DisplayName("Packet을 pcap 파일에 저장한다.")
     void save() throws PacketNativeException, UnknownHostException {
-        TcpPacket tcpPacket = new TcpPacket(createTcpHeader(), new SimplePacket());
-        IpPacket ipPacket = new IpPacket(createIpHeader(), tcpPacket);
+        IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
         EthernetPacket expected = new EthernetPacket(createEthernetHeader(IPV4), ipPacket);
         PacketTestHelper.save(handler, expected);
-        System.out.println(expected);
         Packet actual = createEthernetPacket(read());
 
         assertThat(actual.getHeader()).isEqualTo(expected.getHeader());
