@@ -7,11 +7,8 @@ import org.junit.jupiter.api.Test;
 import web.protocol.Packet;
 import web.protocol.SimplePacket;
 import web.protocol.ethernet.EthernetPacket.EthernetHeader;
-import web.protocol.ip.IpPacket;
 import web.tool.sniffer.PacketHandler;
 import web.tool.sniffer.PacketNativeException;
-
-import java.net.UnknownHostException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static web.protocol.ethernet.PacketTestHelper.*;
@@ -44,10 +41,9 @@ class EthernetPacketTest {
     }
 
     @Test
-    @DisplayName("Packet을 pcap 파일에 저장한다.")
-    void save() throws PacketNativeException, UnknownHostException {
-        IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
-        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), ipPacket);
+    @DisplayName("Ethernet Packet을 pcap 파일에 저장한다.")
+    void save() throws PacketNativeException {
+        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), new SimplePacket());
         PacketTestHelper.save(handler, expected);
         Packet actual = createEthernetPacket(read());
 
