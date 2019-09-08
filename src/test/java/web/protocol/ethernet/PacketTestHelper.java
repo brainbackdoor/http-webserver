@@ -26,14 +26,16 @@ import static web.protocol.ethernet.EthernetPacket.EthernetHeader;
 import static web.protocol.ethernet.EthernetPacket.EthernetHeader.*;
 import static web.protocol.ip.ProtocolIdentifier.TCP;
 import static web.protocol.ip.Version.IPV4;
+import static web.protocol.tcp.Flag.SYN;
 
 public class PacketTestHelper {
     private static final String PCAP_FILE_KEY = EthernetPacketTest.class.getName() + ".pcapFile";
     private static final String PCAP_FILE = System.getProperty(PCAP_FILE_KEY, "Dump.pcap");
 
     public static EthernetHeader createEthernetHeader(Type protocolType) {
-        MacAddress src = MacAddress.getByName("00:00:00:00:00:01");
+        MacAddress src = MacAddress.getByName("38:f9:d3:1a:6e:24");
         MacAddress dst = MacAddress.ETHER_BROADCAST_ADDRESS;
+
         return new EthernetHeader(dst, src, protocolType);
     }
 
@@ -47,12 +49,12 @@ public class PacketTestHelper {
     }
 
     public static IpHeader createIpHeader() throws UnknownHostException {
-        Inet4Address src = (Inet4Address) InetAddress.getByName("192.168.6.171");
-        Inet4Address dst = (Inet4Address) InetAddress.getByName("192.168.6.172");
+        Inet4Address src = (Inet4Address) InetAddress.getByName("192.168.6.175");
+        Inet4Address dst = (Inet4Address) InetAddress.getByName("3.19.114.185");
         return IpHeader.builder()
                 .version(IPV4)
                 .ihl((byte) 5)
-                .totalLength((short) 40)
+                .totalLength((short) 80)
                 .identification((short) 2)
                 .tos(IpV4TosTest.of())
                 .protocolIdentifier(TCP)
@@ -74,12 +76,10 @@ public class PacketTestHelper {
         return TcpPacket.TcpHeader.builder()
                 .dstPort(TcpPort.HTTP)
                 .srcPort(TcpPort.NONE)
-                .sequenceNumber(1234567)
-                .acknowledgmentNumber(7654321)
-                .window((short) 9999)
+                .sequenceNumber(1)
+                .window((short) 65535)
                 .offset((byte) 15)
-                .flag(web.protocol.tcp.Flag.SYN)
-                .urgentPointer((short) 1111)
+                .flag(SYN)
                 .options(options)
                 .build();
     }

@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum TcpPort {
 
-    NONE((short) 0, "NONE"),
+    NONE((short) 53661, "NONE"),
     SSH((short) 22, "SSH"),
     TELNET((short) 23, "Telnet"),
     HTTP((short) 80, "HTTP");

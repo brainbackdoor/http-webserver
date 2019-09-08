@@ -67,7 +67,6 @@ class TcpPacketTest extends PacketTestHelper {
 
     }
 
-
     // TODO: Port Open을 확인한다
 
     // TODO: DNS Packet을 전송한다.
