@@ -6,26 +6,30 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import web.protocol.Packet;
 import web.protocol.SimplePacket;
-import web.protocol.arp.ArpPacket;
 import web.protocol.ethernet.EthernetPacket.EthernetHeader;
+import web.protocol.helper.PacketTestHelper;
 import web.protocol.ip.IpPacket;
-import web.tool.sniffer.PacketHandler;
+import web.tool.analysis.NetInfo;
 import web.tool.sniffer.PacketNativeException;
+import web.util.ByteUtils;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static web.protocol.ethernet.PacketTestHelper.*;
+import static web.protocol.ethernet.EthernetPacket.EthernetHeader.*;
 import static web.protocol.ethernet.Type.ARP;
-import static web.protocol.ethernet.Type.IPV4;
 
-class EthernetPacketTest {
-    PacketHandler handler;
+public class EthernetPacketTest extends PacketTestHelper {
 
     @BeforeEach
     void setUp() throws Exception {
-        handler = getHandler();
+        NetInfo netInfo = new NetInfo();
+        nicName = netInfo.getNic();
+        macAddress = netInfo.getMacAddress();
+        localIp = netInfo.getIp();
+        handler = getHandler(nicName);
+        listener = packet -> gotPacket(packet);
+        packetStorage =  new PacketStorage();
     }
 
     @Test
@@ -40,11 +44,11 @@ class EthernetPacketTest {
     @Test
     @DisplayName("Ethernet Packet을 전송한다.")
     void send() throws Exception {
-        IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
-        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), ipPacket);
-        Packet actual = handler.sendPacket(expected);
+        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), new SimplePacket());
+        handler.sendPacket(expected);
+        handler.loop(5, listener);
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(packetStorage.exist(expected)).isTrue();
     }
 
     @Test
@@ -53,30 +57,34 @@ class EthernetPacketTest {
         IpPacket ipPacket = new IpPacket(createIpHeader(), new SimplePacket());
         EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), ipPacket);
         PacketTestHelper.save(handler, expected);
-        Packet actual = createEthernetPacket(read());
+        Packet actual = buildEthernetPacket(read());
 
         assertThat(actual.getHeader()).isEqualTo(expected.getHeader());
     }
 
-    @Test
-    @DisplayName("ARP를 이용하여 공유기 주소를 알아온다.")
-    void search() throws PacketNativeException, UnknownHostException {
-        ArpPacket.ArpHeader header = ArpPacket.ArpHeader.builder()
-                .dstHardwareAddr(MacAddress.ETHER_BROADCAST_ADDRESS)
-                .srcHardwareAddr(MacAddress.getByName("38:f9:d3:1a:6e:24"))
-                .hardwareType(ArpPacket.HardwareType.ETHERNET)
-                .protocolType(IPV4)
-                .hardwareAddrLength((byte) 6)
-                .protocolAddrLength((byte) 4)
-                .opcode(ArpPacket.Opcode.REQUEST)
-                .srcProtocolAddr(InetAddress.getByName("3.19.114.185"))
-                .dstProtocolAddr(InetAddress.getByName("192.0.2.100"))
-                .build();
-        ArpPacket arpPacket = new ArpPacket(header);
-        EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), arpPacket);
-        Packet actual = handler.sendPacket(expected);
+    public static EthernetHeader createEthernetHeader(Type protocolType) {
+        MacAddress src = MacAddress.getByName(macAddress);
+        MacAddress dst = MacAddress.ETHER_BROADCAST_ADDRESS;
 
-        assertThat(actual.getHeader()).isEqualTo(expected.getHeader());
+        return new EthernetHeader(dst, src, protocolType);
+    }
+
+    public static Packet buildEthernetPacket(byte[] rawData) {
+        EthernetHeader header = buildEthernetHeader(rawData);
+        return new EthernetPacket(header, new SimplePacket());
+    }
+
+    public static EthernetHeader buildEthernetHeader(byte[] rawData) {
+        MacAddress dstAddr = ByteUtils.getMacAddress(rawData, DST_ADDR_OFFSET);
+        MacAddress srcAddr = ByteUtils.getMacAddress(rawData, SRC_ADDR_OFFSET);
+        Type type = Type.getInstance(ByteUtils.getShort(rawData, TYPE_OFFSET));
+
+        return new EthernetHeader(dstAddr, srcAddr, type);
+    }
+
+    private void gotPacket(byte[] raw) {
+        Packet packet = buildEthernetPacket(raw);
+        packetStorage.add(packet);
     }
 
     @AfterEach

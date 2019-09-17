@@ -55,13 +55,13 @@ public class EthernetPacket implements Packet {
     @EqualsAndHashCode
     public static final class EthernetHeader implements Header {
 
-        static final int DST_ADDR_OFFSET = 0;
+        public static final int DST_ADDR_OFFSET = 0;
         private static final int DST_ADDR_SIZE = SIZE_IN_BYTES;
-        static final int SRC_ADDR_OFFSET = DST_ADDR_OFFSET + DST_ADDR_SIZE;
+        public static final int SRC_ADDR_OFFSET = DST_ADDR_OFFSET + DST_ADDR_SIZE;
         private static final int SRC_ADDR_SIZE = SIZE_IN_BYTES;
-        static final int TYPE_OFFSET = SRC_ADDR_OFFSET + SRC_ADDR_SIZE;
+        public static final int TYPE_OFFSET = SRC_ADDR_OFFSET + SRC_ADDR_SIZE;
         private static final int TYPE_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int ETHERNET_HEADER_SIZE = TYPE_OFFSET + TYPE_SIZE; // 14 Bytes
+        public static final int ETHERNET_HEADER_SIZE = TYPE_OFFSET + TYPE_SIZE; // 14 Bytes
 
         private final MacAddress dstAddr;
         private final MacAddress srcAddr;

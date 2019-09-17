@@ -2,6 +2,8 @@ package web.protocol.ip;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum Version {
 
@@ -13,5 +15,9 @@ public enum Version {
     Version(byte value, String name) {
         this.value = value;
         this.name = name;
+    }
+
+    public static Version getInstance(byte value) {
+        return Arrays.stream(Version.values()).filter(v -> v.value == value).findFirst().get();
     }
 }
