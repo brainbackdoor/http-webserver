@@ -61,6 +61,12 @@ public class NativeMappings {
 
     static native int pcap_next_ex(Pointer p, PointerByReference h, PointerByReference data);
 
+    static native int pcap_loop(Pointer p, int cnt, pcap_handler callback, Pointer user);
+
+    interface pcap_handler extends Callback {
+        void got_packet(Pointer args, Pointer header, Pointer packet);
+    }
+
     private static short getFamilyByPlatform(short data) {
         return (isWindowsType()) ? data : formatByteOrder(data);
     }
@@ -77,7 +83,7 @@ public class NativeMappings {
         if (Platform.isMac()
                 || Platform.isFreeBSD()
                 || Platform.isOpenBSD()
-                || Platform.iskFreeBSD()) {
+                || Platform.isFreeBSD()) {
             return false;
         }
         return true;

@@ -8,9 +8,11 @@ import web.util.ByteUtils;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static web.util.ByteUtils.*;
+import static web.util.PacketUtils.copyHeader;
 
 @ToString
 @EqualsAndHashCode
@@ -34,12 +36,15 @@ public class ArpPacket implements Packet {
 
     @Override
     public int length() {
-        return 0;
+        return header.length();
     }
 
     @Override
     public byte[] getRawData() {
-        return new byte[0];
+        byte[] result = new byte[length()];
+
+        copyHeader(this, result, 0);
+        return result;
     }
 
     @Builder
@@ -47,23 +52,23 @@ public class ArpPacket implements Packet {
     @EqualsAndHashCode
     public static final class ArpHeader implements Header {
 
-        private static final int HARDWARE_TYPE_OFFSET = 0;
+        public static final int HARDWARE_TYPE_OFFSET = 0;
         private static final int HARDWARE_TYPE_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int PROTOCOL_TYPE_OFFSET = HARDWARE_TYPE_OFFSET + HARDWARE_TYPE_SIZE;
+        public static final int PROTOCOL_TYPE_OFFSET = HARDWARE_TYPE_OFFSET + HARDWARE_TYPE_SIZE;
         private static final int PROTOCOL_TYPE_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int HW_ADDR_LENGTH_OFFSET = PROTOCOL_TYPE_OFFSET + PROTOCOL_TYPE_SIZE;
+        public static final int HW_ADDR_LENGTH_OFFSET = PROTOCOL_TYPE_OFFSET + PROTOCOL_TYPE_SIZE;
         private static final int HW_ADDR_LENGTH_SIZE = BYTE_SIZE_IN_BYTES;
-        private static final int PROTO_ADDR_LENGTH_OFFSET = HW_ADDR_LENGTH_OFFSET + HW_ADDR_LENGTH_SIZE;
+        public static final int PROTO_ADDR_LENGTH_OFFSET = HW_ADDR_LENGTH_OFFSET + HW_ADDR_LENGTH_SIZE;
         private static final int PROTO_ADDR_LENGTH_SIZE = BYTE_SIZE_IN_BYTES;
-        private static final int OPERATION_OFFSET = PROTO_ADDR_LENGTH_OFFSET + PROTO_ADDR_LENGTH_SIZE;
+        public static final int OPERATION_OFFSET = PROTO_ADDR_LENGTH_OFFSET + PROTO_ADDR_LENGTH_SIZE;
         private static final int OPERATION_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int SRC_HARDWARE_ADDR_OFFSET = OPERATION_OFFSET + OPERATION_SIZE;
+        public static final int SRC_HARDWARE_ADDR_OFFSET = OPERATION_OFFSET + OPERATION_SIZE;
         private static final int SRC_HARDWARE_ADDR_SIZE = MacAddress.SIZE_IN_BYTES;
-        private static final int SRC_PROTOCOL_ADDR_OFFSET = SRC_HARDWARE_ADDR_OFFSET + SRC_HARDWARE_ADDR_SIZE;
+        public static final int SRC_PROTOCOL_ADDR_OFFSET = SRC_HARDWARE_ADDR_OFFSET + SRC_HARDWARE_ADDR_SIZE;
         private static final int SRC_PROTOCOL_ADDR_SIZE = INET4_ADDRESS_SIZE_IN_BYTES;
-        private static final int DST_HARDWARE_ADDR_OFFSET = SRC_PROTOCOL_ADDR_OFFSET + SRC_PROTOCOL_ADDR_SIZE;
+        public static final int DST_HARDWARE_ADDR_OFFSET = SRC_PROTOCOL_ADDR_OFFSET + SRC_PROTOCOL_ADDR_SIZE;
         private static final int DST_HARDWARE_ADDR_SIZE = MacAddress.SIZE_IN_BYTES;
-        private static final int DST_PROTOCOL_ADDR_OFFSET = DST_HARDWARE_ADDR_OFFSET + DST_HARDWARE_ADDR_SIZE;
+        public static final int DST_PROTOCOL_ADDR_OFFSET = DST_HARDWARE_ADDR_OFFSET + DST_HARDWARE_ADDR_SIZE;
         private static final int DST_PROTOCOL_ADDR_SIZE = INET4_ADDRESS_SIZE_IN_BYTES;
 
         private static final int ARP_HEADER_SIZE = DST_PROTOCOL_ADDR_OFFSET + DST_PROTOCOL_ADDR_SIZE;
@@ -106,6 +111,11 @@ public class ArpPacket implements Packet {
 
         private short value;
         private String name;
+
+
+        public static HardwareType getInstance(Short value){
+            return Arrays.stream(HardwareType.values()).filter(v -> v.value == value).findFirst().get();
+        }
     }
 
     @Getter
@@ -116,5 +126,9 @@ public class ArpPacket implements Packet {
 
         private short value;
         private String name;
+
+        public static Opcode getInstance(Short value){
+            return Arrays.stream(Opcode.values()).filter(v -> v.value == value).findFirst().get();
+        }
     }
 }

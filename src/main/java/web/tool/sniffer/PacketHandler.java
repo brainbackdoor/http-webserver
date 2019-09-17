@@ -8,8 +8,11 @@ import lombok.Getter;
 import org.apache.commons.lang3.math.NumberUtils;
 import web.protocol.Packet;
 import web.tool.dump.TcpDump;
+import web.tool.sniffer.NativeMappings.pcap_pkthdr;
 
 import java.io.Closeable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Builder
@@ -18,12 +21,13 @@ public class PacketHandler implements Closeable {
     private final Pointer handle;
     private final TimestampPrecision timestampPrecision;
 
-    public Packet sendPacket(Packet packet) throws PacketNativeException {
+    static ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+    public void sendPacket(Packet packet) throws PacketNativeException {
         if (packet == null) {
             throw new NullPointerException("packet may not be null");
         }
         sendPacket(packet.getRawData());
-        return packet;
     }
 
     public void sendPacket(byte[] bytes) throws PacketNativeException {
@@ -42,8 +46,9 @@ public class PacketHandler implements Closeable {
         return new TcpDump(open(filePath), timestampPrecision);
     }
 
-    private Pointer open(String filePath) throws PacketNativeException {
-        return apply(o -> NativeMappings.pcap_dump_open(handle, filePath));
+    public void loop(int packetCount, PacketListener listener) {
+        GotPacketFuncExecutor handler = new GotPacketFuncExecutor(listener);
+        NativeMappings.pcap_loop(handle, packetCount, handler, null);
     }
 
     public byte[] getNextRawPacket() throws PacketNativeException {
@@ -51,6 +56,10 @@ public class PacketHandler implements Closeable {
         PointerByReference dataPP = new PointerByReference();
 
         return getNextRawPacket(headerPP, dataPP);
+    }
+
+    private Pointer open(String filePath) throws PacketNativeException {
+        return apply(o -> NativeMappings.pcap_dump_open(handle, filePath));
     }
 
     private byte[] getNextRawPacket(PointerByReference headerPP, PointerByReference dataPP) throws PacketNativeException {
@@ -101,4 +110,21 @@ public class PacketHandler implements Closeable {
 
         private final int value;
     }
+
+    private final class GotPacketFuncExecutor implements NativeMappings.pcap_handler {
+
+        private final PacketListener listener;
+
+        public GotPacketFuncExecutor(PacketListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public void got_packet(Pointer args, Pointer header, final Pointer packet) {
+            final byte[] ba = packet.getByteArray(0, pcap_pkthdr.getCaplen(header));
+
+            executorService.submit(() -> listener.gotPacket(ba));
+        }
+    }
 }
+
