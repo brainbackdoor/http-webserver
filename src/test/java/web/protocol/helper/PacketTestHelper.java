@@ -88,8 +88,6 @@ public class PacketTestHelper {
         dumper.close();
     }
 
-
-
     @ToString
     public static final class PacketStorage {
         private List<Packet> packets = new ArrayList<>();

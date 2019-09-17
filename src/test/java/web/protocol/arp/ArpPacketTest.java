@@ -56,8 +56,7 @@ class ArpPacketTest extends PacketTestHelper {
         ArpPacket arpPacket = new ArpPacket(header);
         EthernetPacket expected = new EthernetPacket(createEthernetHeader(ARP), arpPacket);
         handler.sendPacket(expected);
-        handler.loop(100, listener);
-
+        handler.loop(5, listener);
 
         assertThat(packetStorage.exist(expected)).isTrue();
     }

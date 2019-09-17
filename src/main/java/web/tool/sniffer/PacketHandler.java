@@ -49,11 +49,6 @@ public class PacketHandler implements Closeable {
     public void loop(int packetCount, PacketListener listener) {
         GotPacketFuncExecutor handler = new GotPacketFuncExecutor(listener);
         NativeMappings.pcap_loop(handle, packetCount, handler, null);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public byte[] getNextRawPacket() throws PacketNativeException {
