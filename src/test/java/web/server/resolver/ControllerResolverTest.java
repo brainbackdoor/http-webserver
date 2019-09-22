@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static web.protocol.http.message.response.StatusCode.FOUND;
+import static web.protocol.http.message.response.StatusCode.OK;
 
 class ControllerResolverTest {
     private ControllerResolver resolver = new ControllerResolver();
@@ -28,7 +28,7 @@ class ControllerResolverTest {
         resolver.resolve(request, response);
 
         // then
-        assertThat(response.getStatusCode()).isEqualByComparingTo(FOUND);
+        assertThat(response.getStatusCode()).isEqualByComparingTo(OK);
     }
 
 }

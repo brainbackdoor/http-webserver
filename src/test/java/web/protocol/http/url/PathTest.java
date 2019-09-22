@@ -12,7 +12,7 @@ class PathTest {
     void splitBySlashWhenConstructor() {
         String givenPath = "/seasonal/index.html";
         String expectedFirstPath = "seasonal";
-        String expectedSecondPath = "static/index.html";
+        String expectedSecondPath = "index.html";
 
         Path path = Path.of(givenPath);
 

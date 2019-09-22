@@ -31,7 +31,7 @@ class IndexControllerTest {
 
         // then
         assertThat(response.getStatusCode());
-        assertThat(response.getHeaders().getHeader("Location").getValue()).isEqualTo("/static/index.html");
+        assertThat(response.getHeaders().getHeader("Location").getValue()).isEqualTo("/templates/index.html");
 
     }
 
