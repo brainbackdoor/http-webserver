@@ -81,6 +81,6 @@ class URLTest {
         URL url = new URL(givenTrue);
 
         assertThat(url.getPath().get(1)).isEqualTo(new PathCarving("seasonal"));
-        assertThat(url.getPath().get(2)).isEqualTo(new PathCarving("static/index.html"));
+        assertThat(url.getPath().get(2)).isEqualTo(new PathCarving("index.html"));
     }
 }

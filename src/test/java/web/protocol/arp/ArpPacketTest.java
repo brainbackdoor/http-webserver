@@ -1,9 +1,6 @@
 package web.protocol.arp;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import web.protocol.Packet;
 import web.protocol.arp.ArpPacket.ArpHeader;
 import web.protocol.arp.ArpPacket.HardwareType;
@@ -40,6 +37,7 @@ class ArpPacketTest extends PacketTestHelper {
     }
 
     @Test
+    @Disabled
     @DisplayName("ARP를 이용하여 공유기 주소를 알아온다.")
     void search() throws Exception {
         ArpPacket.ArpHeader header = ArpPacket.ArpHeader.builder()
