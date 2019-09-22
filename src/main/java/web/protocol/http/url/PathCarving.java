@@ -16,6 +16,10 @@ public class PathCarving {
         this.parameters = extract(input).stream().map(Parameter::new).collect(toList());
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public Parameter getParameter(int index) {
         return parameters.get(index);
     }

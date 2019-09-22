@@ -1,62 +1,47 @@
 package web.protocol.http.message.response;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import web.protocol.http.message.common.EntityBody;
 import web.protocol.http.message.common.Headers;
-import web.protocol.http.message.MessageBuilder;
-import web.protocol.http.message.StartLine;
 
+import java.io.IOException;
+
+import static web.protocol.http.message.common.Version.HTTP_1_1;
+import static web.protocol.http.message.response.StatusCode.*;
+
+@Builder
+@Getter
+@Setter
 public class ResponseMessage {
-    private StartLine responseLine;
+    private ResponseLine responseLine;
     private Headers headers;
     private EntityBody entityBody;
 
-    public ResponseMessage(StartLine responseLine, Headers headers, EntityBody entityBody) {
+    public ResponseMessage(ResponseLine responseLine, Headers headers, EntityBody entityBody) {
         this.responseLine = responseLine;
         this.headers = headers;
         this.entityBody = entityBody;
     }
 
-    public StartLine getResponseLine() {
-        return responseLine;
+    public void redirect(String url) {
+        this.responseLine = new ResponseLine(HTTP_1_1, FOUND);
+        this.headers.addLocation(url);
     }
 
-    public Headers getHeaders() {
-        return headers;
+    public StatusCode getStatusCode() {
+        return responseLine.getStatusCode();
     }
 
-    public EntityBody getEntityBody() {
-        return entityBody;
+    public void ok(byte[] body) {
+        responseLine.setStatusCode(OK);
+        entityBody.setBody(body);
     }
 
-    public static ResponseMessageBuilder builder() {
-        return new ResponseMessageBuilder();
-    }
-
-    public static final class ResponseMessageBuilder implements MessageBuilder {
-        private StartLine responseLine;
-        private Headers headers;
-        private EntityBody entityBody;
-
-        private ResponseMessageBuilder() {
-        }
-
-        public MessageBuilder withStartLine(StartLine responseLine) {
-            this.responseLine = responseLine;
-            return this;
-        }
-
-        public MessageBuilder withHeaders(Headers headers) {
-            this.headers = headers;
-            return this;
-        }
-
-        public MessageBuilder withEntityBody(EntityBody entityBody) {
-            this.entityBody = entityBody;
-            return this;
-        }
-
-        public ResponseMessage build() {
-            return new ResponseMessage(responseLine, headers, entityBody);
-        }
+    public void notFound(IOException exception) {
+        responseLine.setStatusCode(NOT_FOUND);
+        entityBody.setBody(exception.getMessage().getBytes());
     }
 }
+

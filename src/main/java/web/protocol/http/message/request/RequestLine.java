@@ -1,11 +1,12 @@
 package web.protocol.http.message.request;
 
-import web.protocol.http.message.StartLine;
+import lombok.Getter;
 import web.protocol.http.message.common.Version;
 
 import java.util.Objects;
 
-public class RequestLine implements StartLine {
+@Getter
+public class RequestLine {
     public static final String DELIMITER_REQUEST_LINE = " ";
     private final Method method;
     private final RequestURL requestURL;

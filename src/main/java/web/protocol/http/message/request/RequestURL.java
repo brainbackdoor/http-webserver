@@ -26,6 +26,10 @@ public class RequestURL {
         return url.getPath();
     }
 
+    public String getFullPath() {
+        return url.getFullPath();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

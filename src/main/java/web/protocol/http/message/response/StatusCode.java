@@ -73,4 +73,8 @@ public enum StatusCode {
     public ReasonPhrase getReasonPhrase() {
         return reasonPhrase;
     }
+
+    public int getValue() {
+        return value;
+    }
 }

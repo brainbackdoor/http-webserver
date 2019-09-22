@@ -13,7 +13,7 @@ public class RequestMessageFactory extends MessageFactory {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         RequestMessage.RequestMessageBuilder builder = RequestMessage.builder();
-        builder.withStartLine(createRequestLine(reader));
+        builder.requestLine(createRequestLine(reader));
         buildEntityBody(builder, reader, buildHeaders(builder, reader));
         return builder.build();
     }

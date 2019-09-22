@@ -24,7 +24,7 @@ class RequestURLTest {
     @Test
     @DisplayName("완전한 URL이 아닐 경우 Host/Port가 자신을 가리키는 것으로 간주한다.")
     void relativeUrl() {
-        String url = "/index.html";
+        String url = "/static/index.html";
         Host expectedHost = Host.of("127.0.0.1");
         Port expectedPort = Port.of(80);
 
