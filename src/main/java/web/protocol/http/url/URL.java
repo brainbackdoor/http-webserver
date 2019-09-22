@@ -66,6 +66,10 @@ public class URL {
         return path;
     }
 
+    public String getFullPath() {
+        return path.getFullPath();
+    }
+
     private void absolutePath(String input) {
         String[] data = extractScheme(input);
         data = extractUserInfo(data);

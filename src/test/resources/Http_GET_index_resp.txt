@@ -1,5 +1,4 @@
 HTTP/1.1 301 OK
-Location: http://www.gentle-grooming.com/
 Content-Length: 56
 Content-Type: text/plain
 

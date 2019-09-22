@@ -3,7 +3,6 @@ package web.protocol.http.message.common;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -11,10 +10,19 @@ import java.util.stream.Collectors;
 
 public class EntityBody {
     public static final String DEFAULT_KEY = "";
-    private List<Parameter> parameters = new ArrayList<>();
+    private byte[] body;
+    private List<Parameter> parameters;
+
+    public EntityBody(byte[] body) {
+        this.body = body;
+    }
 
     public EntityBody(List<Parameter> parameters) {
         this.parameters = parameters;
+    }
+
+    public static EntityBody of() {
+        return new EntityBody(new byte[]{});
     }
 
     public static EntityBody of(String rawParameters) {
@@ -23,6 +31,14 @@ public class EntityBody {
             parameters.add(new Parameter(DEFAULT_KEY, rawParameters));
         }
         return new EntityBody(parameters);
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
+
+    public byte[] getBody() {
+        return body;
     }
 
     public String get(String key) {

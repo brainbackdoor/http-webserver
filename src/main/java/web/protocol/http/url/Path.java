@@ -22,6 +22,10 @@ public class Path {
         return values.get(index);
     }
 
+    public String getFullPath() {
+        return values.stream().map(PathCarving::getValue).collect(joining("/"));
+    }
+
     private List<String> extract(String value) {
         return Arrays.asList(value.split(DELIMITER_PATH));
     }

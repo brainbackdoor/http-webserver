@@ -3,6 +3,8 @@ package web.protocol.http.message;
 import org.apache.commons.lang3.StringUtils;
 import web.protocol.http.message.common.EntityBody;
 import web.protocol.http.message.common.Headers;
+import web.protocol.http.message.request.RequestMessage;
+import web.protocol.http.message.response.ResponseMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,16 +20,29 @@ public class MessageFactory {
         return EntityBody.of(readData(reader, contentLength));
     }
 
-    protected static Headers buildHeaders(MessageBuilder builder, BufferedReader reader) throws IOException {
+    protected static Headers buildHeaders(RequestMessage.RequestMessageBuilder builder, BufferedReader reader) throws IOException {
         Headers headers = createdHeaders(reader);
-        builder.withHeaders(headers);
+        builder.headers(headers);
         return headers;
     }
 
-    protected static void buildEntityBody(MessageBuilder builder, BufferedReader reader, Headers headers) throws IOException {
+    protected static Headers buildHeaders(ResponseMessage.ResponseMessageBuilder builder, BufferedReader reader) throws IOException {
+        Headers headers = createdHeaders(reader);
+        builder.headers(headers);
+        return headers;
+    }
+
+    protected static void buildEntityBody(RequestMessage.RequestMessageBuilder builder, BufferedReader reader, Headers headers) throws IOException {
         if (headers.hasContentLength()) {
             int contentLength = headers.getContentLength();
-            builder.withEntityBody(createEntityBody(reader, contentLength));
+            builder.entityBody(createEntityBody(reader, contentLength));
+        }
+    }
+
+    protected static void buildEntityBody(ResponseMessage.ResponseMessageBuilder builder, BufferedReader reader, Headers headers) throws IOException {
+        if (headers.hasContentLength()) {
+            int contentLength = headers.getContentLength();
+            builder.entityBody(createEntityBody(reader, contentLength));
         }
     }
 

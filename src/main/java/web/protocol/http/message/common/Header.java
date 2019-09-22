@@ -1,9 +1,12 @@
 package web.protocol.http.message.common;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 import static web.protocol.http.message.common.Header.Type.CONTENT_LENGTH;
 
+@Getter
 public class Header {
 
     public static final String DELIMITER_HEADER = ": ";
@@ -24,9 +27,10 @@ public class Header {
         return this.type.equals(CONTENT_LENGTH);
     }
 
-    public String getValue() {
-        return value;
+    public boolean isSameType(String name) {
+        return type.value.equals(name);
     }
+
 
     public enum Type {
 
@@ -98,7 +102,13 @@ public class Header {
         // 엔터티 캐싱 헤더
         ETAG("ETag"),
         EXPIRES("Expires"),
-        LAST_MODIFIED("Last-Modified");
+        LAST_MODIFIED("Last-Modified"),
+
+        // 그 외
+        UPGRADE_INSECURE_REQUESTS("Upgrade-Insecure-Requests"),
+        SEC_FETCH_MODE("Sec-Fetch-Mode"),
+        SEC_FETCH_User("Sec-Fetch-User"),
+        SEC_FETCH_SITE("Sec-Fetch-Site");
 
         private String value;
 
@@ -111,6 +121,10 @@ public class Header {
                     .filter(v -> v.value.equals(input))
                     .findFirst()
                     .orElseThrow(IllegalArgumentException::new);
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
