@@ -11,7 +11,7 @@ import web.protocol.http.message.response.StatusCode;
 import web.server.controller.AbstractController;
 
 public class IndexController extends AbstractController {
-    public static final String URL = "/index.html";
+    public static final String URL = "/index";
 
     @Override
     public void doGet(RequestMessage request, ResponseMessage response) {

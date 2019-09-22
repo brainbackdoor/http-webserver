@@ -43,7 +43,7 @@ public class ResponseMessageFactory extends MessageFactory {
         String headers = getHeader(message);
         dos.writeBytes(responseLine);
         dos.writeBytes(headers);
-        dos.write(message.getEntityBody().getBody(), 0, message.getEntityBody().getBody().length);
+        dos.write(message.getEntityBody().getBody(), 0, message.getEntityBody().getBodyLength());
         dos.flush();
     }
 
@@ -74,7 +74,7 @@ public class ResponseMessageFactory extends MessageFactory {
     }
 
     private static void addContentLength(ResponseMessage message, StringBuilder stringBuilder) {
-        stringBuilder.append(CONTENT_LENGTH).append(message.getEntityBody().getBody().length).append(CRLF);
+        stringBuilder.append(CONTENT_LENGTH).append(message.getEntityBody().getBodyLength()).append(CRLF);
     }
 
 }

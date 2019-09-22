@@ -1,13 +1,18 @@
 package web.protocol.http.message.common;
 
 
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@ToString
 public class EntityBody {
     public static final String DEFAULT_KEY = "";
     private byte[] body;
@@ -37,8 +42,15 @@ public class EntityBody {
         this.body = body;
     }
 
-    public byte[] getBody() {
-        return body;
+    public byte[] getBody() throws IOException {
+        return (parameters == null) ? body : convertListToByte();
+    }
+
+    private byte[] convertListToByte() throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(parameters);
+        return bos.toByteArray();
     }
 
     public String get(String key) {
@@ -49,6 +61,11 @@ public class EntityBody {
         return parameters.size() == 0;
     }
 
+    public int getBodyLength() {
+        return (parameters == null) ? body.length : parameters.size();
+    }
+
+    @ToString
     public static class Parameter {
         private String key;
         private String value;
