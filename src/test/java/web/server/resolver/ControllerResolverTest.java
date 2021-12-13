@@ -1,5 +1,6 @@
 package web.server.resolver;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import web.protocol.http.message.request.RequestMessage;
 import web.protocol.http.message.request.RequestMessageFactory;
@@ -17,6 +18,7 @@ class ControllerResolverTest {
     private ControllerResolver resolver = new ControllerResolver();
 
     @Test
+    @DisplayName("HTTP GET 요청을 테스트한다.")
     void index() throws IOException {
         // given
         InputStream in = FileLoader.load("Http_GET_index.txt");
